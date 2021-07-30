@@ -41,17 +41,20 @@ using UnityEngine;
 
 public class TunelSegment : MonoBehaviour
 {
-    public Transform tA;
-    public Transform tB;
-    public Matrix4x4 coef;
-    public Vector3 t1 = new Vector3(0f, 0, 1.5f);
-    public Vector3 t0 = new Vector3(1f, 0, -1f);
-    public float _seconds;
-    const bool LOG_SPLINE_VALUES = false; 
-   
     [Range(1, 1000)]
     public int resolution = 1000;
 
+
+    public Transform tA;
+    public Transform tB;
+    public int n_frame = 0;
+    public Matrix4x4 coef;
+    public Vector3 t1 = new Vector3(0f, 0, 1.5f);
+    public Vector3 t0 = new Vector3(1f, 0, -1f);
+    public Vector3[] points = new Vector3[1000 + 1];
+    public float _seconds;
+    const bool LOG_SPLINE_VALUES = false; 
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -60,6 +63,8 @@ public class TunelSegment : MonoBehaviour
         t0 = new Vector3(1f, 0, -1f);
         Knot A = tA.GetComponent<Knot>();
         Knot B = tB.GetComponent<Knot>();
+
+        points = new Vector3[resolution+1];
         A.t = t0;
         B.t = t1;
 
@@ -83,16 +88,18 @@ public class TunelSegment : MonoBehaviour
 
     public void UpdateSpline()
     {
-        
-        //set up sphere rotation equal to t0
-        Knot A = tA.GetComponent<Knot>();
-        Knot B = tB.GetComponent<Knot>();
-        float scaler = 10f;
-        t0 = A.t.normalized * scaler;
-        t1 = B.t.normalized * scaler;
+        if ((n_frame % 10) == 0)
+        {
+            //set up sphere rotation equal to t0
+            Knot A = tA.GetComponent<Knot>();
+            Knot B = tB.GetComponent<Knot>();
+            float scaler = 10f;
+            t0 = A.t.normalized * scaler;
+            t1 = B.t.normalized * scaler;
 
-        Debug.Log($"UpdateSpline() t0={t0} t1={t1} ");
-        coef = CalculateSpline(tA.position, tB.position, t0, t1);
+            Debug.Log($"UpdateSpline() t0={t0} t1={t1} ");
+            coef = CalculateSpline(tA.position, tB.position, t0, t1);
+        }
     }
 
     Matrix4x4 CalculateSpline(Vector3 startP, Vector3 endP, 
@@ -143,6 +150,32 @@ public class TunelSegment : MonoBehaviour
         solution[3, 0] = (float)y[3, 0];
         solution[3, 1] = (float)y[3, 1];
 
+        float U = 0;         //parameter U lies in interval [0,1]
+        float ax, bx, cx, dx;
+        float ay, by, cy, dy;
+
+        ax = solution[0, 0];
+        ay = solution[0, 1];
+        bx = solution[1, 0];
+        by = solution[1, 1];
+        cx = solution[2, 0];
+        cy = solution[2, 1];
+        dx = solution[3, 0];
+        dy = solution[3, 1];
+
+        Vector3 p0 = tA.position, p = p0;
+        float ustep = 1f / resolution;
+        for (int i = 0; i < resolution; i++)
+        {
+            //equation for Hermitt spline for 2D case
+            //when add additional dimension for 3D case
+            p.x = ax + bx * U + cx * U * U + U * U * U * dx;
+            p.z = ay + by * U + cy * U * U + U * U * U * dy;
+            U += ustep;
+            p0 = p;
+            points[i] = p0;
+        }
+
         return solution;
     }
 
@@ -157,37 +190,8 @@ public class TunelSegment : MonoBehaviour
     void DrawSpline(Vector3 startP, Vector3 endP, Vector3 tangentVec1, Vector3 tangentVec2,
                     Matrix4x4 coeff, bool bLogSpline=false)
     {
-        
-        float U = 0;         //parameter U lies in interval [0,1]
-        float ax, bx, cx, dx;
-        float ay, by, cy, dy;
-
-        ax = coeff[0, 0];
-        ay = coeff[0, 1];
-        bx = coeff[1, 0];
-        by = coeff[1, 1];
-        cx = coeff[2, 0];
-        cy = coeff[2, 1];
-        dx = coeff[3, 0];
-        dy = coeff[3, 1];
-
-        Vector3 p0 = tA.position, p = p0;
-        float ustep = 1f / resolution;
-        if ( bLogSpline ) Debug.Log($"[DrawSpline] ustep={ustep}");
-        for (int i = 0; i < resolution; i++)
-        {
-            //equation for Hermitt spline for 2D case
-            //when add additional dimension for 3D case
-            p.x = ax + bx * U + cx * U * U + U * U * U * dx;
-            p.z = ay + by * U + cy * U * U + U * U * U * dy;
-            U += ustep;
-            if ( !bLogSpline ) Gizmos.DrawLine(p0, p);
-            p0 = new Vector3(p.x, 0, p.z);
-            if( bLogSpline )
-                Debug.Log($"[DrawSpline] p={p} U={U}");
-
-
-        }
+        for (int i = 1; i < resolution; i++)
+           Gizmos.DrawLine(points[i-1], points[i]);
     }
 
     void drawWalls(Vector3 p, float R, Vector3 t)
@@ -208,10 +212,11 @@ public class TunelSegment : MonoBehaviour
 
     void OnDrawGizmos()
     {
-
-
-        // draw tangential vectors at points p (0) and p (1)
-        float scaler = 1f;
+        if ((n_frame % 2) != 0)
+            return;
+        
+            // draw tangential vectors at points p (0) and p (1)
+            float scaler = 1f;
         //t0 = t0.normalized;
         Vector3 T0 = tA.position + t0 * scaler;
         Vector3 T1 = tB.position + t1 * scaler;
@@ -248,6 +253,7 @@ public class TunelSegment : MonoBehaviour
             UpdateSpline();
         }
         */
-
+        n_frame++;        
+        if (n_frame > int.MaxValue/2) n_frame = 0;
     }
 }
