@@ -1,13 +1,15 @@
 /*---------------------------------------------------------------------------------------+
-  +-+--+---+--+-+  copytight by Kvazikot (twitter.com/Kvazikot) +-+--+---+--+-+          |
-  +-+--+ email: vsbaranov83@gmail.com                                                    |  
-  +-+--+ github: http://github.com/Kvazikot/                                             |  
-  +-+--+---+--+-+ ѕрограмма построени€ тоннел€ с дорогой. ƒорога плавно переходит        |
-  в кротовую нору. “екстура стенок кротовой норы мен€етс€, примеры                       |
-  картинок можно посмотреть  c:\images\путь_к_кратинкам                                  |
-  “оннель можно будет встроить в сцену с автомобилем.                                    |
-  ƒата создани€ исходника: 28.07.2021                                                    |
-+----------------------------------------------------------------------------------------+
+  +-+-+---+-+-+ copytight by Kvazikot  +-+-+---+-+-+ 
+  +-+-+ email: vsbaranov83@gmail.com 
+  + - + - + github: http://github.com/Kvazikot/ 
+  + - + - + --- + - + - + 
+  Program for building a tunnel with a road. The road passes smoothly 
+  into a wormhole.The texture of the walls of a wormhole is changing, examples 
+  pictures can be viewed c: \ images \ path_to_kartinkam 
+  The tunnel can be built into the scene with the car. 
+
+  Source creation date: 07/28/2021 
++ ------------------------------------------------- --------------------------------------- +
                 +-+--+---+--+-+     MIT LICENSE     +-+--+---+--+-+                                   
 
 Copyright (c) 2021 Kvazikot
@@ -42,10 +44,10 @@ public class TunelSegment : MonoBehaviour
     public Transform tA;
     public Transform tB;
     public Matrix4x4 coef;
-    public Vector3 t0 = new Vector3(0.1f, 0, 0.5f);
-    public Vector3 t1 = new Vector3(0.9f, 0, -0.5f);
+    public Vector3 t1 = new Vector3(0f, 0, 1.5f);
+    public Vector3 t0 = new Vector3(1f, 0, -1f);
     public float _seconds;
-    const bool LOG_SPLINE_VALUES = true; 
+    const bool LOG_SPLINE_VALUES = false; 
    
     [Range(1, 1000)]
     public int resolution = 1000;
@@ -53,10 +55,15 @@ public class TunelSegment : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //copy tangent vectors from rotation of tA and tB       
-        t0 = tA.rotation.eulerAngles.normalized;
-        t1 = tB.rotation.eulerAngles.normalized;
+        //set up sphere rotation equal to t0
+        t1 = new Vector3(0f, 0, 1.5f);
+        t0 = new Vector3(1f, 0, -1f);
+        Knot A = tA.GetComponent<Knot>();
+        Knot B = tB.GetComponent<Knot>();
+        A.t = t0;
+        B.t = t1;
 
+        //copy tangent vectors from rotation of tA and tB       
         coef = CalculateSpline(tA.position, tB.position, t0, t1);
         Debug.Log("result of function: ");
         Debug.Log("+-+--+---+ Tunel::CalculateSpline() +-+--+---+");
@@ -65,15 +72,26 @@ public class TunelSegment : MonoBehaviour
         Debug.Log($"coefficient of solution Matrix for Hermit spline");
         Debug.Log($"{coef}");
         Debug.Log("result of function: ");
-        Debug.Log("+-+--+---+ Tunel::DrawSpline() +-+--+---+");
-        
-        DrawSpline(tA.position, tB.position, t0, t1, coef, LOG_SPLINE_VALUES);
+        Debug.Log("+-+--+---+ Tunel::DrawSpline() +-+--+---+"); // new line
+
+     
+
+        //DrawSpline(tA.position, tB.position, t0, t1, coef, LOG_SPLINE_VALUES);
 
 
     }
 
     public void UpdateSpline()
     {
+        
+        //set up sphere rotation equal to t0
+        Knot A = tA.GetComponent<Knot>();
+        Knot B = tB.GetComponent<Knot>();
+        float scaler = 10f;
+        t0 = A.t.normalized * scaler;
+        t1 = B.t.normalized * scaler;
+
+        Debug.Log($"UpdateSpline() t0={t0} t1={t1} ");
         coef = CalculateSpline(tA.position, tB.position, t0, t1);
     }
 
@@ -115,7 +133,7 @@ public class TunelSegment : MonoBehaviour
             {xx1, yy1}});
 
         var y = A.Solve(v);
-        Debug.Log($"y={ y }");
+        //Debug.Log($"y={ y }");
         solution[0, 0] = (float)y[0, 0];
         solution[0, 1] = (float)y[0, 1];
         solution[1, 0] = (float)y[1, 0];
@@ -128,9 +146,9 @@ public class TunelSegment : MonoBehaviour
         return solution;
     }
 
-    // –асстановка источников света внутри тоннел€
-    // цвет подсветки тунел€ мен€етс€ от зеленого к синему
-    // и от синего к красному
+    // Arrange the light sources inside the tunnel
+    // tunnel lighting color changes from green to blue
+    // and from blue to red
     void setupLights()
     { 
     
@@ -173,41 +191,41 @@ public class TunelSegment : MonoBehaviour
     }
 
     void drawWalls(Vector3 p, float R, Vector3 t)
-    { 
-        //1. Tangent of curve t = > Euler angles
+    {
+        //1. Tangent of curve t => Euler angles
 
-        //2. поворот плоскости основани€ тонел€ (окружности) на EulerAngles
+        //2. rotation of the plane of the base of the tunnel (circle) to EulerAngles
 
-        //3. получение вершин с заданным уровенем сегментации N_hor_seg
-        // между соседними точками направл€ющей кривой
+        //3. getting vertices with a given segmentation level N_hor_seg
+        //between adjacent points of the guide curve
 
-        //4. ѕостроение трубы с 0 толщиной стенки
-        
-        //5. ѕостроение трубы с WallThickness толщиной стенки
+        //4. Constructing a pipe with 0 wall thickness
 
-        //6. –асстановка света
+        //5. Constructing a pipe with a WallThickness of the wall thickness
+
+        //6. Light arrangement
     }
 
     void OnDrawGizmos()
     {
 
 
-        // нарисовать тангенциальные векторы в точках p(0) и p(1)
-        float scale = 2;
+        // draw tangential vectors at points p (0) and p (1)
+        float scaler = 1f;
         //t0 = t0.normalized;
-        Vector3 T0 = tA.position + t0 * scale;
-        Vector3 T1 = tB.position + t1 * scale;
+        Vector3 T0 = tA.position + t0 * scaler;
+        Vector3 T1 = tB.position + t1 * scaler;
         Gizmos.color = Color.green;
         Gizmos.DrawLine(tA.position, T0);
         Gizmos.DrawLine(tB.position, T1);
         Handles.DrawDottedLine(T1, T1, 20);
         Handles.DrawDottedLine(T0, T0, 20);
 
-        // нарисовать сплайн
+        // draw a spline
         Gizmos.color = Color.yellow;
         DrawSpline(tA.position, tB.position, t0, t1, coef);
 
-        // нарисовать обмотку
+        // draw the walls
         float radius = 3;
         Gizmos.color = Color.white;
         Handles.DrawWireDisc(tA.position, new Vector3(1, 0, 0), radius);
@@ -216,6 +234,7 @@ public class TunelSegment : MonoBehaviour
 
     void Update()
     {
+        /*
         //copy tangent vectors from rotation of tA and tB       
         if ((t0 != tA.rotation.eulerAngles.normalized) ||
              (t1 != tB.rotation.eulerAngles.normalized) )
@@ -228,6 +247,7 @@ public class TunelSegment : MonoBehaviour
             t1.z = tB.rotation.eulerAngles.normalized.z;
             UpdateSpline();
         }
+        */
 
     }
 }
