@@ -9,6 +9,8 @@ public class Knot : MonoBehaviour
     public float angleDeegrees = 90f;
     public Vector3 position;
     public Quaternion rotation;
+    public Vector3 scale;
+    float  SCALER = 100f;
 
     // Start is called before the first frame update
     void Start()
@@ -20,18 +22,22 @@ public class Knot : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if ((position != transform.position) || (rotation!= transform.rotation))
+        if ((position != transform.position) || 
+            (rotation!= transform.rotation) ||
+            (scale != transform.localScale))
         {
-            tunel.UpdateSpline();
             float a;
             Vector3 tt;
             transform.rotation.ToAngleAxis(out a, out tt);
             tt.y = 0;
             t = tt;
-            Debug.Log($"tt = {tt}");
+            t = tt.normalized * SCALER * Mathf.Abs(transform.localScale.x);
+            tunel.UpdateSpline();
+            //Debug.Log($"localScale = {transform.localScale.x}");
         }
         position = transform.position;
         rotation = transform.rotation;
+        scale = transform.localScale;
         //Debug.Log("LateUpdate");
     }
 }

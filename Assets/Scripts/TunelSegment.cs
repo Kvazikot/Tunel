@@ -43,7 +43,12 @@ public class TunelSegment : MonoBehaviour
 {
     [Range(1, 1000)]
     public int resolution = 1000;
-
+    [Range(1, 1000)]
+    public float radius = 1f;
+    [Range(1, 1000)]
+    public int num_linear_segments = 20;
+    [Range(1, 1000)]
+    public int num_lateral_segments = 20;
 
     public Transform tA;
     public Transform tB;
@@ -93,11 +98,10 @@ public class TunelSegment : MonoBehaviour
             //set up sphere rotation equal to t0
             Knot A = tA.GetComponent<Knot>();
             Knot B = tB.GetComponent<Knot>();
-            float scaler = 10f;
-            t0 = A.t.normalized * scaler;
-            t1 = B.t.normalized * scaler;
+            t0 = A.t;
+            t1 = B.t;
 
-            Debug.Log($"UpdateSpline() t0={t0} t1={t1} ");
+            //Debug.Log($"UpdateSpline() t0={t0} t1={t1} ");
             coef = CalculateSpline(tA.position, tB.position, t0, t1);
         }
     }
@@ -194,11 +198,18 @@ public class TunelSegment : MonoBehaviour
            Gizmos.DrawLine(points[i-1], points[i]);
     }
 
-    void drawWalls(Vector3 p, float R, Vector3 t)
+    
+    void drawWalls() // on DrawGizmos call
     {
         //1. Tangent of curve t => Euler angles
 
         //2. rotation of the plane of the base of the tunnel (circle) to EulerAngles
+        int skip = resolution / num_linear_segments;
+        for (int i = 1; i < resolution; i+=skip)
+        {
+            Gizmos.color = Color.white;
+            Handles.DrawWireDisc(points[i], points[i] - points[i-1], radius);
+        }
 
         //3. getting vertices with a given segmentation level N_hor_seg
         //between adjacent points of the guide curve
@@ -231,9 +242,7 @@ public class TunelSegment : MonoBehaviour
         DrawSpline(tA.position, tB.position, t0, t1, coef);
 
         // draw the walls
-        float radius = 3;
-        Gizmos.color = Color.white;
-        Handles.DrawWireDisc(tA.position, new Vector3(1, 0, 0), radius);
+        drawWalls();
 
     }
 
