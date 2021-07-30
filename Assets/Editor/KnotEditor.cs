@@ -16,7 +16,6 @@ public class KnotEditor : Editor
             Transform transform = ((Knot)target).transform;
             Vector3 t = ((Knot)target).t;
             float angleX = Mathf.Atan2(t.x, t.z) * Mathf.Rad2Deg;
-            float angleZ = 90 - angleX;
             Quaternion q = Quaternion.AngleAxis(angleX, Vector3.up);
             
                 //(Vector3.up, t);

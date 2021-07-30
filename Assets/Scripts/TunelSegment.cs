@@ -199,16 +199,47 @@ public class TunelSegment : MonoBehaviour
     }
 
     
-    void drawWalls() // on DrawGizmos call
+    void drawWireSegments() // on DrawGizmos call
     {
         //1. Tangent of curve t => Euler angles
 
         //2. rotation of the plane of the base of the tunnel (circle) to EulerAngles
-        int skip = resolution / num_linear_segments;
-        for (int i = 1; i < resolution; i+=skip)
+        float pathLen = 0, L = 0, gapLen = 0;
+
+        for (int i = 1; i < resolution; i++)
+        {
+            float length = (points[i] - points[i - 1]).magnitude;
+            L += length;
+        }
+        
+        pathLen = L;
+        float segPerUnit = 1f;
+        float n_total_segments =  (pathLen * segPerUnit);
+        gapLen = pathLen / n_total_segments;
+
+        for (int i = 1; i < resolution; i++)
         {
             Gizmos.color = Color.white;
-            Handles.DrawWireDisc(points[i], points[i] - points[i-1], radius);
+            float length = (points[i] - points[i - 1]).magnitude;
+            //int n_segm = 
+            L += length;
+            if (L > gapLen)
+            {
+                Handles.DrawWireDisc(points[i - 1], points[i] - points[i - 1], radius);
+                L = 0;
+            }
+            if (length > gapLen)
+            {
+                float n_sub_segments = length / gapLen;
+                for (float j = 0; j < n_sub_segments; j+=1f)
+                {
+                    // interpolate coordinate
+                    Vector3 p = Vector3.Lerp(points[i - 1], points[i], j / n_sub_segments);
+                    // interpolate normal
+                    Handles.DrawWireDisc(p, points[i] - points[i - 1], radius);
+                    Debug.Log("n_sub_segments branch!");
+                }            
+            }
         }
 
         //3. getting vertices with a given segmentation level N_hor_seg
@@ -242,7 +273,7 @@ public class TunelSegment : MonoBehaviour
         DrawSpline(tA.position, tB.position, t0, t1, coef);
 
         // draw the walls
-        drawWalls();
+        drawWireSegments();
 
     }
 
