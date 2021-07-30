@@ -29,7 +29,7 @@ public class Knot : MonoBehaviour
             float a;
             Vector3 tt;
             transform.rotation.ToAngleAxis(out a, out tt);
-            tt.y = 0;
+            //tt.y = 0;
             t = tt;
             t = tt.normalized * SCALER * Mathf.Abs(transform.localScale.x);
             tunel.UpdateSpline();

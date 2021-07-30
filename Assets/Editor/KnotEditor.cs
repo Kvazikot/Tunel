@@ -16,15 +16,17 @@ public class KnotEditor : Editor
             Transform transform = ((Knot)target).transform;
             Vector3 t = ((Knot)target).t;
             float angleX = Mathf.Atan2(t.x, t.z) * Mathf.Rad2Deg;
-            Quaternion q = Quaternion.AngleAxis(angleX, Vector3.up);
-            
-                //(Vector3.up, t);
+            float angleZ = Mathf.Atan2(t.x, t.y) * Mathf.Rad2Deg;
+            Quaternion q1 = Quaternion.AngleAxis(angleX, Vector3.up);
+            Quaternion q2 = Quaternion.AngleAxis(angleZ, Vector3.left);
+
+            //(Vector3.up, t);
             Handles.color = Color.yellow;
 
             Handles.ArrowHandleCap(
                 0,
                 transform.position,
-                q,
+                q1 * q2,
                 size,
                 EventType.Repaint
             );
