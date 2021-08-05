@@ -5,7 +5,7 @@
   + - + - + --- + - + - + 
   Program for building a tunnel with a road. The road passes smoothly 
   into a wormhole.The texture of the walls of a wormhole is changing, examples 
-  pictures can be viewed c: \ images \ path_to_kartinkam 
+  pictures can be viewed c: \ images \ path_to_images
   The tunnel can be built into the scene with the car. 
 
   Source creation date: 07/28/2021 
@@ -39,16 +39,40 @@ using MathNet.Numerics.LinearAlgebra.Double;
 using UnityEditor;
 using UnityEngine;
 
+
+
+public class Tunel
+{
+    public Tunel(Transform parentNode)
+    { 
+        for (int i = 1; i < parentNode.childCount; i++)
+        {
+            Transform p1 = parentNode.GetChild(i-1  );
+            Transform p2 = parentNode.GetChild(i);
+            Debug.Log(p1.name);
+            TunelSegment segment = new TunelSegment();
+            segment.tA = p1;
+            segment.tB = p2;
+            segment.Start();
+        }
+
+    }
+
+}
+
+
 public class TunelSegment : MonoBehaviour
 {
+    static Tunel tunel_singleton = null;
+
     [Range(1, 1000)]
     public int resolution = 1000;
     [Range(1, 1000)]
     public float radius = 1f;
     [Range(1, 1000)]
-    public int num_linear_segments = 20;
+    public int num_base_segments = 20;
     [Range(1, 1000)]
-    public int num_lateral_segments = 20;
+    public int num_side_segments = 20;
 
     public Transform tA;
     public Transform tB;
@@ -61,8 +85,13 @@ public class TunelSegment : MonoBehaviour
     const bool LOG_SPLINE_VALUES = false; 
    
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
+        if (tunel_singleton == null)
+        {
+            tunel_singleton = new Tunel(transform);
+            return;
+        }
         //set up sphere rotation equal to t0
         t1 = new Vector3(0f, 0, 1.5f);
         t0 = new Vector3(1f, 0, -1f);
@@ -84,12 +113,13 @@ public class TunelSegment : MonoBehaviour
         Debug.Log("result of function: ");
         Debug.Log("+-+--+---+ Tunel::DrawSpline() +-+--+---+"); // new line
 
-     
-
-        //DrawSpline(tA.position, tB.position, t0, t1, coef, LOG_SPLINE_VALUES);
+      
 
 
-    }
+            //DrawSpline(tA.position, tB.position, t0, t1, coef, LOG_SPLINE_VALUES);
+
+
+        }
 
     public void UpdateSpline()
     {
@@ -258,8 +288,12 @@ public class TunelSegment : MonoBehaviour
             }
         }
 
-        //3. getting vertices with a given segmentation level N_hor_seg
-        //between adjacent points of the guide curve
+        //3. Create Minimal Mesh object.
+        // getting vertices with a given segmentation level N_hor_seg
+        // between adjacent points of the guide curve
+
+        //3.1 Create shader for minimal mesh object
+        // pass guiding curve points to shader for tesselation
 
         //4. Constructing a pipe with 0 wall thickness
 
@@ -274,7 +308,7 @@ public class TunelSegment : MonoBehaviour
             return;
         
             // draw tangential vectors at points p (0) and p (1)
-            float scaler = 1f;
+        float scaler = 1f;
         //t0 = t0.normalized;
         Vector3 T0 = tA.position + t0 * scaler;
         Vector3 T1 = tB.position + t1 * scaler;
@@ -294,21 +328,7 @@ public class TunelSegment : MonoBehaviour
     }
 
     void Update()
-    {
-        /*
-        //copy tangent vectors from rotation of tA and tB       
-        if ((t0 != tA.rotation.eulerAngles.normalized) ||
-             (t1 != tB.rotation.eulerAngles.normalized) )
-            {
-            t0.x = tA.rotation.eulerAngles.normalized.x;
-            t0.y = 0;
-            t0.z = tA.rotation.eulerAngles.normalized.z;
-            t1.x = tB.rotation.eulerAngles.normalized.x;
-            t1.y = 0;
-            t1.z = tB.rotation.eulerAngles.normalized.z;
-            UpdateSpline();
-        }
-        */
+    {      
         n_frame++;        
         if (n_frame > int.MaxValue/2) n_frame = 0;
     }
