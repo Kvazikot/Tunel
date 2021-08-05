@@ -60,13 +60,13 @@ public class Tunel
 
 }
 
-public class TunelMesh
+public class MinimalMesh
 {
     public Mesh mesh;
     Vector3[] vertices;
     int[] triangles;
 
-    public TunelMesh()
+    public MinimalMesh()
     {
         vertices = new Vector3[]
         {
@@ -78,6 +78,7 @@ public class TunelMesh
         {
             0, 1, 2
         };
+        mesh = new Mesh();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
     }
@@ -106,8 +107,8 @@ public class TunelSegment : MonoBehaviour
     public Vector3 t0 = new Vector3(1f, 0, -1f);
     public Vector3[] points = new Vector3[1000 + 1];
     public float _seconds;
-    const bool LOG_SPLINE_VALUES = false; 
-   
+    const bool LOG_SPLINE_VALUES = false;
+    
     // Start is called before the first frame update
     public void Start()
     {
@@ -137,13 +138,16 @@ public class TunelSegment : MonoBehaviour
         Debug.Log("result of function: ");
         Debug.Log("+-+--+---+ Tunel::DrawSpline() +-+--+---+"); // new line
 
-      
+        // create minimal mesh fro tunel 
+        MinimalMesh m = new MinimalMesh();
+        MeshFilter mf = transform.GetComponent<MeshFilter>();
+        mf.mesh = m.mesh;
 
 
-            //DrawSpline(tA.position, tB.position, t0, t1, coef, LOG_SPLINE_VALUES);
+    //DrawSpline(tA.position, tB.position, t0, t1, coef, LOG_SPLINE_VALUES);
 
 
-        }
+    }
 
     public void UpdateSpline()
     {
@@ -298,6 +302,7 @@ public class TunelSegment : MonoBehaviour
                 Handles.DrawWireDisc(points[i - 1], points[i] - points[i - 1], radius);
                 L = 0;
             }
+            /*
             if (length > gapLen)
             {
                 float n_sub_segments = length / gapLen;
@@ -310,6 +315,7 @@ public class TunelSegment : MonoBehaviour
                     Debug.Log("n_sub_segments branch!");
                 }            
             }
+            */
         }
 
         //3. Create Minimal Mesh object.
