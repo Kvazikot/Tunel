@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Knot.cs" />
     <Compile Include="Assets\Scripts\TunelSegment.cs" />
+    <Compile Include="Assets\Scripts\Tunel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\MathNet.Numerics.dll" />

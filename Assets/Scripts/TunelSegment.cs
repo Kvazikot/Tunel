@@ -40,86 +40,8 @@ using UnityEditor;
 using UnityEngine;
 
 
-
-public class Tunel
-{
-    public Tunel(Transform parentNode)
-    { 
-        for (int i = 1; i < parentNode.childCount; i++)
-        {
-            Transform p1 = parentNode.GetChild(i-1  );
-            Transform p2 = parentNode.GetChild(i);
-            Debug.Log(p1.name);
-            TunelSegment segment = new TunelSegment();
-            segment.tA = p1;
-            segment.tB = p2;
-            segment.Start();
-        }
-
-    }
-
-}
-
-public class MinimalMesh
-{
-    public Mesh mesh;
-    Vector3[] vertices;
-    int[] triangles;
-
-    public MinimalMesh(int numVertices=3)
-    {
-        mesh = new Mesh();
-        vertices = new Vector3[]
-        {
-            new Vector3(0,0,0),
-            new Vector3(0,0,10f+1e-6f),
-            new Vector3(10f+231e-6f,0,0)
-        };
-        mesh.vertices = vertices;
-
-        triangles = new int[]
-        {
-            0, 1, 2
-        };
-        mesh.triangles = triangles;
-        
-        Vector3[] normals = new Vector3[]
-        {
-            -Vector3.forward,
-            -Vector3.forward,
-            -Vector3.forward
-        };
-        mesh.normals = normals;
-
-        Vector2[] uv = new Vector2[]
-        {
-            new Vector2(0, 0),
-            new Vector2(1, 0),
-            new Vector2(0, 1)
-        };
-        mesh.uv = uv;
-
-        if (numVertices > 3)
-        {
-            vertices = new Vector3[numVertices + 1];
-            triangles = new int[numVertices * numVertices + 1];
-            normals = new Vector3[numVertices  + 1];
-            uv = new Vector2[numVertices + 1];
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.normals = normals;
-            mesh.uv = uv;
-        }
-
-    }
-
-}
-
-
 public class TunelSegment : MonoBehaviour
 {
-    static Tunel tunel_singleton = null;
-
     [Range(1, 1000)]
     public int resolution = 1000;
     [Range(1, 1000)]
@@ -131,29 +53,23 @@ public class TunelSegment : MonoBehaviour
 
     public Transform tA;
     public Transform tB;
-    public int n_frame = 0;
     public Matrix4x4 coef;
     public Vector3 t1 = new Vector3(0f, 0, 1.5f);
     public Vector3 t0 = new Vector3(1f, 0, -1f);
     public Vector3[] points = new Vector3[1000 + 1];
     public float _seconds;
     const bool LOG_SPLINE_VALUES = false;
-    
+
     // Start is called before the first frame update
     public void Start()
     {
-        if (tunel_singleton == null)
-        {
-            //tunel_singleton = new Tunel(transform);
-            //return;
-        }
         //set up sphere rotation equal to t0
         t1 = new Vector3(0f, 0, 1.5f);
         t0 = new Vector3(1f, 0, -1f);
         Knot A = tA.GetComponent<Knot>();
         Knot B = tB.GetComponent<Knot>();
 
-        points = new Vector3[resolution+1];
+        points = new Vector3[resolution + 1];
         A.t = t0;
         B.t = t1;
 
@@ -168,22 +84,14 @@ public class TunelSegment : MonoBehaviour
         Debug.Log("result of function: ");
         Debug.Log("+-+--+---+ Tunel::DrawSpline() +-+--+---+"); // new line
 
-        // create minimal mesh fro tunel 
-        MeshRenderer meshRenderer = transform.GetComponent<MeshRenderer>();
-        meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
-        MinimalMesh m = new MinimalMesh();
-        MeshFilter mf = transform.GetComponent<MeshFilter>();
-        mf.mesh = m.mesh;
-
-
-    //DrawSpline(tA.position, tB.position, t0, t1, coef, LOG_SPLINE_VALUES);
+      
 
 
     }
 
     public void UpdateSpline()
     {
-        if ((n_frame % 10) == 0)
+        //if ((n_frame % 10) == 0)
         {
             //set up sphere rotation equal to t0
             Knot A = tA.GetComponent<Knot>();
@@ -297,7 +205,7 @@ public class TunelSegment : MonoBehaviour
     
     }
 
-    void DrawSpline(Vector3 startP, Vector3 endP, Vector3 tangentVec1, Vector3 tangentVec2,
+    public void DrawSpline(Vector3 startP, Vector3 endP, Vector3 tangentVec1, Vector3 tangentVec2,
                     Matrix4x4 coeff, bool bLogSpline=false)
     {
         for (int i = 1; i < resolution; i++)
@@ -305,100 +213,9 @@ public class TunelSegment : MonoBehaviour
     }
 
     
-    void drawWireSegments() // on DrawGizmos call
-    {
-        //1. Tangent of curve t => Euler angles
-
-        //2. rotation of the plane of the base of the tunnel (circle) to EulerAngles
-        float pathLen = 0, L = 0, gapLen = 0;
-
-        for (int i = 1; i < resolution; i++)
-        {
-            float length = (points[i] - points[i - 1]).magnitude;
-            L += length;
-        }
-        
-        pathLen = L;
-        float segPerUnit = 1f;
-        float n_total_segments =  (pathLen * segPerUnit);
-        gapLen = pathLen / n_total_segments;
-
-        for (int i = 1; i < resolution; i++)
-        {
-            Gizmos.color = Color.white;
-            float length = (points[i] - points[i - 1]).magnitude;
-            //int n_segm = 
-            L += length;
-            if (L > gapLen)
-            {
-                Handles.DrawWireDisc(points[i - 1], points[i] - points[i - 1], radius);
-                L = 0;
-            }
-            /*
-            if (length > gapLen)
-            {
-                float n_sub_segments = length / gapLen;
-                for (float j = 0; j < n_sub_segments; j+=1f)
-                {
-                    // interpolate coordinate
-                    Vector3 p = Vector3.Lerp(points[i - 1], points[i], j / n_sub_segments);
-                    // interpolate normal
-                    Handles.DrawWireDisc(p, points[i] - points[i - 1], radius);
-                    Debug.Log("n_sub_segments branch!");
-                }            
-            }
-            */
-        }
-
-        // 2.9 Create all tunel in CPU
-
-        //3. Create Minimal Mesh object.
-        // getting vertices with a given segmentation level N_hor_seg
-        // between adjacent points of the guide curve
-
-        //3.1 Create shader for minimal mesh object
-        // pass guiding curve points as mesh points to shader for tesselation
-
-        //3.2 interpolate t0 and t1 tangent vectors on CPU
-        //and pass them to GPU as uniform variables or as uv coordinates
-
-        //4. Constructing a pipe with 0 wall thickness
-
-        //5. Constructing a pipe with a WallThickness of the wall thickness
-
-        //6. Light arrangement
-
-       // 7. animate camera movement thru the tunell
-    }
-
-    void OnDrawGizmos()
-    {
-        if ((n_frame % 2) != 0)
-            return;
-        
-            // draw tangential vectors at points p (0) and p (1)
-        float scaler = 1f;
-        //t0 = t0.normalized;
-        Vector3 T0 = tA.position + t0 * scaler;
-        Vector3 T1 = tB.position + t1 * scaler;
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(tA.position, T0);
-        Gizmos.DrawLine(tB.position, T1);
-        Handles.DrawDottedLine(T1, T1, 20);
-        Handles.DrawDottedLine(T0, T0, 20);
-
-        // draw a spline
-        Gizmos.color = Color.yellow;
-        DrawSpline(tA.position, tB.position, t0, t1, coef);
-
-        // draw the walls
-        drawWireSegments();
-
-    }
 
     void Update()
     {      
-        n_frame++;        
-        if (n_frame > int.MaxValue/2) n_frame = 0;
+       
     }
 }
