@@ -68,23 +68,49 @@ public class MinimalMesh
 
     public MinimalMesh(int numVertices=3)
     {
+        mesh = new Mesh();
         vertices = new Vector3[]
         {
             new Vector3(0,0,0),
-            new Vector3(0,0,1),
-            new Vector3(1,0,0)
+            new Vector3(0,0,10f+1e-6f),
+            new Vector3(10f+231e-6f,0,0)
         };
+        mesh.vertices = vertices;
+
         triangles = new int[]
         {
             0, 1, 2
         };
-        for (int i = 0; i < numVertices; i++)
-        {
-            
-        }
-        mesh = new Mesh();
-        mesh.vertices = vertices;
         mesh.triangles = triangles;
+        
+        Vector3[] normals = new Vector3[]
+        {
+            -Vector3.forward,
+            -Vector3.forward,
+            -Vector3.forward
+        };
+        mesh.normals = normals;
+
+        Vector2[] uv = new Vector2[]
+        {
+            new Vector2(0, 0),
+            new Vector2(1, 0),
+            new Vector2(0, 1)
+        };
+        mesh.uv = uv;
+
+        if (numVertices > 3)
+        {
+            vertices = new Vector3[numVertices + 1];
+            triangles = new int[numVertices * numVertices + 1];
+            normals = new Vector3[numVertices  + 1];
+            uv = new Vector2[numVertices + 1];
+            mesh.vertices = vertices;
+            mesh.triangles = triangles;
+            mesh.normals = normals;
+            mesh.uv = uv;
+        }
+
     }
 
 }
@@ -143,6 +169,8 @@ public class TunelSegment : MonoBehaviour
         Debug.Log("+-+--+---+ Tunel::DrawSpline() +-+--+---+"); // new line
 
         // create minimal mesh fro tunel 
+        MeshRenderer meshRenderer = transform.GetComponent<MeshRenderer>();
+        meshRenderer.sharedMaterial = new Material(Shader.Find("Standard"));
         MinimalMesh m = new MinimalMesh();
         MeshFilter mf = transform.GetComponent<MeshFilter>();
         mf.mesh = m.mesh;
@@ -339,6 +367,8 @@ public class TunelSegment : MonoBehaviour
         //5. Constructing a pipe with a WallThickness of the wall thickness
 
         //6. Light arrangement
+
+       // 7. animate camera movement thru the tunell
     }
 
     void OnDrawGizmos()
