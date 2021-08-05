@@ -66,7 +66,7 @@ public class MinimalMesh
     Vector3[] vertices;
     int[] triangles;
 
-    public MinimalMesh()
+    public MinimalMesh(int numVertices=3)
     {
         vertices = new Vector3[]
         {
@@ -78,6 +78,10 @@ public class MinimalMesh
         {
             0, 1, 2
         };
+        for (int i = 0; i < numVertices; i++)
+        {
+            
+        }
         mesh = new Mesh();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
@@ -318,12 +322,17 @@ public class TunelSegment : MonoBehaviour
             */
         }
 
+        // 2.9 Create all tunel in CPU
+
         //3. Create Minimal Mesh object.
         // getting vertices with a given segmentation level N_hor_seg
         // between adjacent points of the guide curve
 
         //3.1 Create shader for minimal mesh object
-        // pass guiding curve points to shader for tesselation
+        // pass guiding curve points as mesh points to shader for tesselation
+
+        //3.2 interpolate t0 and t1 tangent vectors on CPU
+        //and pass them to GPU as uniform variables or as uv coordinates
 
         //4. Constructing a pipe with 0 wall thickness
 
