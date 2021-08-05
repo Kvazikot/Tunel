@@ -60,6 +60,30 @@ public class Tunel
 
 }
 
+public class TunelMesh
+{
+    public Mesh mesh;
+    Vector3[] vertices;
+    int[] triangles;
+
+    public TunelMesh()
+    {
+        vertices = new Vector3[]
+        {
+            new Vector3(0,0,0),
+            new Vector3(0,0,1),
+            new Vector3(1,0,0)
+        };
+        triangles = new int[]
+        {
+            0, 1, 2
+        };
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+    }
+
+}
+
 
 public class TunelSegment : MonoBehaviour
 {
@@ -89,8 +113,8 @@ public class TunelSegment : MonoBehaviour
     {
         if (tunel_singleton == null)
         {
-            tunel_singleton = new Tunel(transform);
-            return;
+            //tunel_singleton = new Tunel(transform);
+            //return;
         }
         //set up sphere rotation equal to t0
         t1 = new Vector3(0f, 0, 1.5f);
