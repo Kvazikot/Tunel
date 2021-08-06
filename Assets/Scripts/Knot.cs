@@ -4,10 +4,9 @@ public class Knot : MonoBehaviour
 {
     public Tunel tunel = null;
     public Vector3 t;
-    public float angleDeegrees = 90f;
-    public Vector3 position;
-    public Quaternion rotation;
-    public Vector3 scale;
+    Vector3 position;
+    Quaternion rotation;
+    Vector3 scale;
     public float SCALER = 1f;
 
     // Start is called before the first frame update
@@ -20,7 +19,7 @@ public class Knot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        return;
+        //return;
         if ((position != transform.position) || 
             (rotation!= transform.rotation) ||
             (scale != transform.localScale))
@@ -29,8 +28,8 @@ public class Knot : MonoBehaviour
             Vector3 tt;
             transform.rotation.ToAngleAxis(out a, out tt);
             //tt.y = 0;
-            t = tt;
-            t = tt.normalized * SCALER ;
+            //t = tt;
+            //t = tt.normalized * SCALER ;
             if(tunel!=null) tunel.UpdateGeometry();
             //Debug.Log($"localScale = {transform.localScale.x}");
         }

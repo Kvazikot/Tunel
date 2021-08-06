@@ -60,18 +60,19 @@ public class TunelSegment
     public float _seconds;
     const bool LOG_SPLINE_VALUES = false;
 
-    public TunelSegment(Transform p1, Transform p2)
+    public TunelSegment(Knot p1, Knot p2)
     {
-        tA = p1; tB = p2;    
+        tA = p1.transform; tB = p2.transform;
+        t0 = p1.t; t1 = p2.t;
     }
 
     // Start is called before the first frame update
     public void Start()
     {
         //set up sphere rotation equal to t0
-        Knot A = tA.GetComponent<Knot>();
-        Knot B = tB.GetComponent<Knot>();
-        t1 = B.t; t0 = A.t;
+        //Knot A = tA.GetComponent<Knot>();
+        //Knot B = tB.GetComponent<Knot>();
+        //t1 = B.t; t0 = A.t;
 
         points = new Vector3[resolution + 1];
 
@@ -98,10 +99,10 @@ public class TunelSegment
             //set up sphere rotation equal to t0
             Knot A = tA.GetComponent<Knot>();
             Knot B = tB.GetComponent<Knot>();
-            t0 = A.t;
-            t1 = B.t;
+            t0 = A.t * A.SCALER;
+            t1 = B.t * B.SCALER;
 
-            //Debug.Log($"UpdateSpline() t0={t0} t1={t1} ");
+            Debug.Log($"UpdateSpline() t0={t0} t1={t1} ");
             coef = CalculateSpline(tA.position, tB.position, t0, t1);
         }
     }
@@ -135,7 +136,7 @@ public class TunelSegment
         float dUx = 1f / non_zero(x1 - x0);
         float dUy = 1f / non_zero(y1 - y0);
         float dUz = 1f / non_zero(z1 - z0);
-        Debug.Log($"dUx = {dUx} dUy = {dUy} dUz = {dUz}");
+        //Debug.Log($"dUx = {dUx} dUy = {dUy} dUz = {dUz}");
         float xx0 = t0.x * dUx;
         float yy0 = t0.z * dUy;
         float zz0 = t0.y * dUz;
