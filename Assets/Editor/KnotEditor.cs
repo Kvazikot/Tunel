@@ -12,7 +12,7 @@ public class KnotEditor : Editor
     {
         if (Event.current.type == EventType.Repaint)
         {
-            size = 2.5f;
+            size = ((Knot)target).SCALER;
             Transform transform = ((Knot)target).transform;
             Vector3 A = ((Knot)target).t;
             Vector3 b = new Vector3(0, 0, 1);

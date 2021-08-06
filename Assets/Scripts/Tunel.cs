@@ -97,6 +97,8 @@ public class Tunel : MonoBehaviour
 {
     List<TunelSegment> segments;
     public int n_frame = 0;
+    public Vector3 inital_t = new Vector3(1,0,1);
+
     public Tunel()
     {
         segments = new List<TunelSegment>();
@@ -107,36 +109,36 @@ public class Tunel : MonoBehaviour
         //create LHC segments
 
         segments.Clear();
-        Vector3 t = new Vector3(0, 0, 1);
+        Vector3 t = inital_t;
         Quaternion q = new Quaternion();
-        q.eulerAngles = new Vector3(0, 0, 90);
-        q = Quaternion.AngleAxis(90, Vector3.up);
+        q.eulerAngles = new Vector3(0, 0, 60);
+        q = Quaternion.AngleAxis(60, Vector3.up);
 
         Debug.Log($"LHC ---------START--------");
         List<Tuple<Knot, Knot>> knts = new List<Tuple<Knot, Knot>>();
         Knot k1 = transform.GetChild(transform.childCount - 1).GetComponent<Knot>();
         Knot k2 = transform.GetChild(0).GetComponent<Knot>();
-        knts.Add(new Tuple<Knot, Knot>(k1, k2));
         for (int i = 1; i < transform.childCount; i++)
         {
             k1 = transform.GetChild(i - 1).GetComponent<Knot>();
             k2 = transform.GetChild(i).GetComponent<Knot>();
             knts.Add(new Tuple<Knot,Knot>(k1, k2));
         }
+        //knts.Add(new Tuple<Knot, Knot>(k1, k2));
 
-        foreach(Tuple<Knot, Knot> pair in knts)
+        foreach (Tuple<Knot, Knot> pair in knts)
         {
-            Vector3 t0 =  q * t;
+            Vector3 t0 =  t; 
             Vector3 t1 =  q * t0;
-            t = t0;
             Debug.Log($"LHC t0 = ${t0} t1 = ${t1}");
-            pair.Item1.t = t0;
+            pair.Item1.t = t0 * pair.Item1.SCALER;            
             pair.Item1.UpdateRotation();
-            pair.Item2.t = t1;
+            pair.Item2.t = t1 * pair.Item2.SCALER;
             pair.Item2.UpdateRotation();
             TunelSegment segment = new TunelSegment(pair.Item1.transform, pair.Item2.transform);
             segments.Add(segment);
             segment.Start();
+            t = t1;
         }
         Debug.Log($"LHC ---------END-------");
 
@@ -252,9 +254,8 @@ public class Tunel : MonoBehaviour
 
     public void UpdateGeometry()
     {
-        for (int i = 1; i < segments.Count; i++)
-        {
-        }
+        for (int i = 0; i < segments.Count; i++)
+            segments[i].UpdateSpline();
     }
 
     // Update is called once per frame

@@ -30,7 +30,7 @@ public class Knot : MonoBehaviour
             transform.rotation.ToAngleAxis(out a, out tt);
             //tt.y = 0;
             t = tt;
-            t = tt.normalized * SCALER * Mathf.Abs(transform.localScale.x);
+            t = tt.normalized * SCALER ;
             if(tunel!=null) tunel.UpdateGeometry();
             //Debug.Log($"localScale = {transform.localScale.x}");
         }
