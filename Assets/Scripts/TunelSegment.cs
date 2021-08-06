@@ -40,7 +40,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-public class TunelSegment : MonoBehaviour
+public class TunelSegment 
 {
     [Range(1, 1000)]
     public int resolution = 1000;
@@ -60,6 +60,11 @@ public class TunelSegment : MonoBehaviour
     public float _seconds;
     const bool LOG_SPLINE_VALUES = false;
 
+    public TunelSegment(Transform p1, Transform p2)
+    {
+        tA = p1; tB = p2;    
+    }
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -71,10 +76,10 @@ public class TunelSegment : MonoBehaviour
         points = new Vector3[resolution + 1];
 
         //copy tangent vectors from rotation of tA and tB       
-        coef = CalculateSpline(tA.position, tB.position, t0, t1);
-        Debug.Log("result of function: ");
         Debug.Log("------------- Tunel::CalculateSpline() -------------");
         Debug.Log($"A={tA.position} B={tB.position}");
+        coef = CalculateSpline(tA.position, tB.position, t0, t1);
+        Debug.Log("result of function: ");
         Debug.Log($"t0={t0} t1={t1}");
         Debug.Log($"coefficient of solution Matrix for Hermit spline");
         Debug.Log($"{coef}");
@@ -101,6 +106,14 @@ public class TunelSegment : MonoBehaviour
         }
     }
 
+    float non_zero(float value)
+    {
+        if (Mathf.Abs(value) < 1e-5f)
+            return 1e-5f;
+        else
+            return value;
+    }
+
     Matrix4x4 CalculateSpline(Vector3 startP, Vector3 endP, 
                               Vector3 tangentVec1, Vector3 tangentVec2)
     {
@@ -111,17 +124,18 @@ public class TunelSegment : MonoBehaviour
         //set x(0) and y(0)
         float x0 = tA.position.x;
         float y0 = tA.position.z;
-        float z0 = Mathf.Max(1e-5f, tA.position.y);
+        float z0 = tA.position.y;
 
         //set x(1) and y(1)
         float x1 = tB.position.x;
         float y1 = tB.position.z;
-        float z1 = Mathf.Max(1e-5f, tB.position.y);
+        float z1 = tB.position.y;
 
         // set x'(0) and y'(0)
-        float dUx = 1f / (x1 - x0);
-        float dUy = 1f / (y1 - y0);
-        float dUz = 1f / (z1 - z0);
+        float dUx = 1f / non_zero(x1 - x0);
+        float dUy = 1f / non_zero(y1 - y0);
+        float dUz = 1f / non_zero(z1 - z0);
+        Debug.Log($"dUx = {dUx} dUy = {dUy} dUz = {dUz}");
         float xx0 = t0.x * dUx;
         float yy0 = t0.z * dUy;
         float zz0 = t0.y * dUz;
@@ -206,7 +220,10 @@ public class TunelSegment : MonoBehaviour
                     Matrix4x4 coeff, bool bLogSpline=false)
     {
         for (int i = 1; i < resolution; i++)
-           Gizmos.DrawLine(points[i-1], points[i]);
+        {
+            Gizmos.DrawLine(points[i - 1], points[i]);
+            //Debug.Log($"points[i - 1] = {points[i - 1]}");
+        }
     }
 
     

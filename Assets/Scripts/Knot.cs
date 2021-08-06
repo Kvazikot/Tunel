@@ -42,6 +42,7 @@ public class Knot : MonoBehaviour
 
     public void UpdateRotation()
     {
+
         //transform.rotation = q;
         //float a;
         Vector3 A = t;

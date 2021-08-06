@@ -33,6 +33,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -94,41 +95,47 @@ public class MinimalMesh
 
 public class Tunel : MonoBehaviour
 {
-    TunelSegment[] segments = null;
+    List<TunelSegment> segments;
     public int n_frame = 0;
     public Tunel()
     {
-    
-
+        segments = new List<TunelSegment>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        //создать LHC
-        segments = new TunelSegment[transform.childCount];
+        //create LHC segments
+
+        segments.Clear();
         Vector3 t = new Vector3(0, 0, 1);
         Quaternion q = new Quaternion();
         q.eulerAngles = new Vector3(0, 0, 90);
         q = Quaternion.AngleAxis(90, Vector3.up);
 
         Debug.Log($"LHC ---------START--------");
+        List<Tuple<Knot, Knot>> knts = new List<Tuple<Knot, Knot>>();
+        Knot k1 = transform.GetChild(transform.childCount - 1).GetComponent<Knot>();
+        Knot k2 = transform.GetChild(0).GetComponent<Knot>();
+        knts.Add(new Tuple<Knot, Knot>(k1, k2));
         for (int i = 1; i < transform.childCount; i++)
+        {
+            k1 = transform.GetChild(i - 1).GetComponent<Knot>();
+            k2 = transform.GetChild(i).GetComponent<Knot>();
+            knts.Add(new Tuple<Knot,Knot>(k1, k2));
+        }
+
+        foreach(Tuple<Knot, Knot> pair in knts)
         {
             Vector3 t0 =  q * t;
             Vector3 t1 =  q * t0;
             t = t0;
             Debug.Log($"LHC t0 = ${t0} t1 = ${t1}");
-            Transform p1 = transform.GetChild(i - 1);
-            p1.GetComponent<Knot>().t = t0;
-            p1.GetComponent<Knot>().UpdateRotation();
-            Transform p2 = transform.GetChild(i);
-            p2.GetComponent<Knot>().t = t1;
-            p2.GetComponent<Knot>().UpdateRotation();
-            Debug.Log(p1.name);
-            TunelSegment segment = new TunelSegment();
-            segments[i-1] = segment;
-            segment.tA = p1;
-            segment.tB = p2;
+            pair.Item1.t = t0;
+            pair.Item1.UpdateRotation();
+            pair.Item2.t = t1;
+            pair.Item2.UpdateRotation();
+            TunelSegment segment = new TunelSegment(pair.Item1.transform, pair.Item2.transform);
+            segments.Add(segment);
             segment.Start();
         }
         Debug.Log($"LHC ---------END-------");
@@ -164,10 +171,7 @@ public class Tunel : MonoBehaviour
 
 
     void drawWireSegments(TunelSegment seg) // on DrawGizmos call
-    {
-        //1. Tangent of curve t => Euler angles
-        if (transform.childCount == 0) return;
-        
+    {      
         //2. rotation of the plane of the base of the tunnel (circle) to EulerAngles
         float pathLen = 0, L = 0, gapLen = 0;
 
@@ -217,17 +221,14 @@ public class Tunel : MonoBehaviour
     {
         if ((n_frame % 2) != 0)
             return;
+        
+        if (segments.Count == 0)  return;
 
-        if (segments == null)  return;
-
-        int n_segments = transform.childCount - 1;
-
-        for (int s = 0; s < n_segments; s++)
+        for (int s = 0; s < segments.Count; s++)
         {
 
             TunelSegment seg = segments[s];
-            if (seg == null) return;
-            Debug.Log("Draw segment " + s);
+            
             // draw tangential vectors at points p (0) and p (1)
             float scaler = 1f;
             //t0 = t0.normalized;
@@ -251,7 +252,7 @@ public class Tunel : MonoBehaviour
 
     public void UpdateGeometry()
     {
-        for (int i = 1; i < transform.childCount; i++)
+        for (int i = 1; i < segments.Count; i++)
         {
         }
     }
