@@ -4,16 +4,30 @@ public class Knot : MonoBehaviour
 {
     public Tunel tunel = null;
     public Vector3 t;
-    Vector3 position;
+    public Vector3 position;
     Quaternion rotation;
     Vector3 scale;
     public float SCALER = 1f;
+
+    public Knot(Knot A)
+    {
+        t = A.t;
+        SCALER = A.SCALER;
+        tunel = GameObject.Find("tunel").GetComponent<Tunel>();
+        position = A.transform.position;
+        rotation = A.transform.rotation;
+        scale = A.transform.localScale;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         tunel = GameObject.Find("tunel").GetComponent<Tunel>();
         transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
+        position = transform.position;
+        rotation = transform.rotation;
+        scale = transform.localScale;
+
     }
 
     // Update is called once per frame
@@ -57,7 +71,7 @@ public class Knot : MonoBehaviour
         A = A.normalized;
         //Debug.Log($"LHC b={b}  A={A}");
         //Debug.Log($"LHC magnitude of diff=(b-A)= {(b - A).magnitude}");
-        transform.rotation = q;
+        rotation = q;
 
     }
 }

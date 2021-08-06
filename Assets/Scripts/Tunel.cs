@@ -96,7 +96,14 @@ public class MinimalMesh
 public class Tunel : MonoBehaviour
 {
     List<TunelSegment> segments;
-    public int n_frame = 0;
+    int n_frame = 0;
+    [Range(0.0f, 1f)]
+    public float radius = 0.2f;
+    [Range(1, 1000)]
+    public int num_base_segments = 20;
+    [Range(1, 1000)]
+    public int num_side_segments = 20;
+
 
     public Tunel()
     {
@@ -115,17 +122,21 @@ public class Tunel : MonoBehaviour
 
         Debug.Log($"LHC ---------START--------");
         List<Tuple<Knot, Knot>> knts = new List<Tuple<Knot, Knot>>();
-        Knot k1, k2;
+        Knot k1, k2 ,kk1, kk2;
 
         for (int i = 1; i < transform.childCount; i++)
         {
             k1 = transform.GetChild(i - 1).GetComponent<Knot>();
             k2 = transform.GetChild(i).GetComponent<Knot>();
+            kk1 = new Knot(k1);
+            kk2 = new Knot(k2);
             knts.Add(new Tuple<Knot,Knot>(k1, k2));
         }
         
         k1 = transform.GetChild(transform.childCount - 1).GetComponent<Knot>();
         k2 = transform.GetChild(0).GetComponent<Knot>();
+        kk1 = new Knot(k1);
+        kk2 = new Knot(k2);
         knts.Add(new Tuple<Knot, Knot>(k1, k2));
 
 
@@ -201,7 +212,7 @@ public class Tunel : MonoBehaviour
             L += length;
             if (L > gapLen)
             {
-                Handles.DrawWireDisc(seg.points[i - 1], seg.points[i] - seg.points[i - 1], seg.radius);
+                Handles.DrawWireDisc(seg.points[i - 1], seg.points[i] - seg.points[i - 1], radius);
                 L = 0;
             }
             /*
@@ -239,8 +250,8 @@ public class Tunel : MonoBehaviour
             // draw tangential vectors at points p (0) and p (1)
             float scaler = 1f;
             //t0 = t0.normalized;
-            Vector3 T0 = seg.tA.position + seg.t0 * scaler;
-            Vector3 T1 = seg.tB.position + seg.t1 * scaler;
+            Vector3 T0 = seg.tA.position + seg.tA.t * scaler;
+            Vector3 T1 = seg.tB.position + seg.tB.t * scaler;
             Gizmos.color = Color.green;
             Gizmos.DrawLine(seg.tA.position, T0);
             Gizmos.DrawLine(seg.tB.position, T1);
@@ -249,7 +260,7 @@ public class Tunel : MonoBehaviour
 
             // draw a spline
             Gizmos.color = Color.yellow;
-            seg.DrawSpline(seg.tA.position, seg.tB.position, seg.t0, seg.t1, seg.coef);
+            seg.DrawSpline(seg.tA.position, seg.tB.position, seg.tA.t, seg.tB.t, seg.coef);
 
             // draw the walls
             drawWireSegments(seg);
