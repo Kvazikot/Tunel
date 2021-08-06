@@ -64,25 +64,22 @@ public class TunelSegment : MonoBehaviour
     public void Start()
     {
         //set up sphere rotation equal to t0
-        t1 = new Vector3(0f, 0, 1.5f);
-        t0 = new Vector3(1f, 0, -1f);
         Knot A = tA.GetComponent<Knot>();
         Knot B = tB.GetComponent<Knot>();
+        t1 = B.t; t0 = A.t;
 
         points = new Vector3[resolution + 1];
-        A.t = t0;
-        B.t = t1;
 
         //copy tangent vectors from rotation of tA and tB       
         coef = CalculateSpline(tA.position, tB.position, t0, t1);
         Debug.Log("result of function: ");
-        Debug.Log("+-+--+---+ Tunel::CalculateSpline() +-+--+---+");
+        Debug.Log("------------- Tunel::CalculateSpline() -------------");
         Debug.Log($"A={tA.position} B={tB.position}");
         Debug.Log($"t0={t0} t1={t1}");
         Debug.Log($"coefficient of solution Matrix for Hermit spline");
         Debug.Log($"{coef}");
         Debug.Log("result of function: ");
-        Debug.Log("+-+--+---+ Tunel::DrawSpline() +-+--+---+"); // new line
+        Debug.Log("------------- Tunel::DrawSpline() ------------- "); // new line
 
       
 

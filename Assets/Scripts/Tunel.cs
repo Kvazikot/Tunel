@@ -108,18 +108,16 @@ public class Tunel : MonoBehaviour
         segments = new TunelSegment[transform.childCount];
         Vector3 t = new Vector3(0, 0, 1);
         Quaternion q = new Quaternion();
-        Quaternion q1 = q;
         q.eulerAngles = new Vector3(0, 0, 90);
         q = Quaternion.AngleAxis(90, Vector3.up);
 
-
+        Debug.Log($"LHC ---------START--------");
         for (int i = 1; i < transform.childCount; i++)
         {
             Vector3 t0 =  q * t;
             Vector3 t1 =  q * t0;
-            q1 = q * q1;
             t = t0;
-            Debug.Log($"LHC t = ${t}");
+            Debug.Log($"LHC t0 = ${t0} t1 = ${t1}");
             Transform p1 = transform.GetChild(i - 1);
             p1.GetComponent<Knot>().t = t0;
             p1.GetComponent<Knot>().UpdateRotation();
@@ -133,6 +131,7 @@ public class Tunel : MonoBehaviour
             segment.tB = p2;
             segment.Start();
         }
+        Debug.Log($"LHC ---------END-------");
 
         // create minimal mesh fro tunel 
         MeshRenderer meshRenderer = transform.GetComponent<MeshRenderer>();
