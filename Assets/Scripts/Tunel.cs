@@ -43,7 +43,6 @@ using UnityEngine;
 public class MinimalMesh
 {
     public Mesh mesh;
-
     public MinimalMesh(int numVertices = 3)
     {
         mesh = new Mesh();
@@ -95,7 +94,7 @@ public class MinimalMesh
 
 public class Tunel : MonoBehaviour
 {
-    List<TunelSegment> segments;
+    public List<TunelSegment> segments = null;
     int n_frame = 0;
     [Range(0.0f, 1f)]
     public float radius = 0.2f;
@@ -103,11 +102,19 @@ public class Tunel : MonoBehaviour
     public int num_base_segments = 20;
     [Range(1, 1000)]
     public int num_side_segments = 20;
-
+    public int n_selected_segment = 0;
 
     public Tunel()
     {
         segments = new List<TunelSegment>();
+    }
+
+    public int GetNumSegments()
+    {
+        if (segments != null)
+            return segments.Count;
+        else
+            return 0;
     }
     // Start is called before the first frame update
     void Start()
@@ -151,12 +158,19 @@ public class Tunel : MonoBehaviour
             pair.Item2.SCALER = inital_scaler;
             //pair.Item2.t = t1 * pair.Item2.SCALER;
             pair.Item2.UpdateRotation();
+            Debug.Log($"LHC segments.Count = {segments.Count}");
             TunelSegment segment = new TunelSegment(pair.Item1, pair.Item2);
             segments.Add(segment);
             segment.Start();
+            pair.Item1.SetMySegment(segments.Count);
+            //pair.Item2.SetMySegment(segments.Count);
+            pair.Item1.SetSelectedSegment(segments.Count);
+            //pair.Item2.SetSelectedSegment(segments.Count);
             t = t1;
         }
         Debug.Log($"LHC ---------END-------");
+
+        // create collider
 
         // create minimal mesh fro tunel 
         MeshRenderer meshRenderer = transform.GetComponent<MeshRenderer>();
@@ -260,6 +274,8 @@ public class Tunel : MonoBehaviour
 
             // draw a spline
             Gizmos.color = Color.yellow;
+            if ( s == n_selected_segment)
+                Gizmos.color = Color.red;
             seg.DrawSpline(seg.tA.position, seg.tB.position, seg.tA.t, seg.tB.t, seg.coef);
 
             // draw the walls
@@ -279,6 +295,7 @@ public class Tunel : MonoBehaviour
     {
         n_frame++;
         if (n_frame > int.MaxValue / 2) n_frame = 0;
+
     }
 }
 

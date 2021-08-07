@@ -7,9 +7,30 @@ using UnityEditor;
 public class KnotEditor : Editor
 {
     float size = 1.5f;
+    int seg_switch = 1;
+
+
+    public override void OnInspectorGUI() 
+    {
+        EditorGUILayout.Slider(size, 0, 100);
+        Knot myTarget = (Knot)target;
+        //int max_segments = myTarget.tunel.segments.Count;
+        //myTarget.n_selected_segment = EditorGUILayout.Slider("n_selected_segment", myTarget.n_selected_segment, 0, max_segments);
+
+        // Show default inspector property editor
+        DrawDefaultInspector();
+    }
 
     protected virtual void OnSceneGUI()
     {
+        if (Event.current.type == EventType.MouseUp && Event.current.button == 0)
+        {
+            seg_switch = -seg_switch;
+            Knot knot = (Knot)target;
+            knot.SetSelectedSegment(knot.GetSelectedSegment() + seg_switch);
+            Debug.Log("selected segment " + knot.GetSelectedSegment());
+        }
+
         if (Event.current.type == EventType.Repaint)
         {
             size = ((Knot)target).SCALER;

@@ -7,7 +7,13 @@ public class Knot : MonoBehaviour
     public Vector3 position;
     Quaternion rotation;
     Vector3 scale;
+    [Range(0, 100)]
     public float SCALER = 1f;
+    [Range(0, 360)]
+    public float angle1;
+    public int n_selected_segment = 0;
+    public int n_segment = 0;
+
 
     public Knot(Knot A)
     {
@@ -18,6 +24,21 @@ public class Knot : MonoBehaviour
         rotation = A.transform.rotation;
         scale = A.transform.localScale;
     }
+
+    public void SetSelectedSegment(int n)
+    {
+       n_selected_segment = n;
+        if (tunel != null)
+            tunel.n_selected_segment = n;
+    }
+
+    public void SetMySegment(int n)
+    {
+        n_segment = n;
+    }
+
+    public int GetMySegment() { return n_segment; }
+    public int GetSelectedSegment() { return n_selected_segment; }
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +72,7 @@ public class Knot : MonoBehaviour
         rotation = transform.rotation;
         scale = transform.localScale;
         //Debug.Log("LateUpdate");
+
     }
 
     public void UpdateRotation()
