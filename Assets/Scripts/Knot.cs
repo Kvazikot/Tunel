@@ -19,7 +19,7 @@ public class Knot : MonoBehaviour
     {
         t = A.t;
         SCALER = A.SCALER;
-        tunel = GameObject.Find("tunel").GetComponent<Tunnel>();
+        tunel = GameObject.Find("tunnel").GetComponent<Tunnel>();
         position = A.transform.position;
         rotation = A.transform.rotation;
         scale = A.transform.localScale;
@@ -27,7 +27,7 @@ public class Knot : MonoBehaviour
 
     public void SetSelectedSegment(int n)
     {
-       n_selected_segment = n;
+        n_selected_segment = n;
         if (tunel != null)
             tunel.n_selected_segment = n;
     }
@@ -43,7 +43,7 @@ public class Knot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tunel = GameObject.Find("tunel").GetComponent<Tunnel>();
+        tunel = GameObject.Find("tunnel").GetComponent<Tunnel>();
         transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
         position = transform.position;
         rotation = transform.rotation;

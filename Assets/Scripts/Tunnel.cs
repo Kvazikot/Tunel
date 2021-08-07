@@ -274,7 +274,7 @@ public class Tunnel : MonoBehaviour
 
             // draw a spline
             Gizmos.color = Color.yellow;
-            if ( s == n_selected_segment)
+            if ( s == (n_selected_segment-1))
                 Gizmos.color = Color.red;
             seg.DrawSpline(seg.tA.position, seg.tB.position, seg.tA.t, seg.tB.t, seg.coef);
 

@@ -27,7 +27,7 @@ public class KnotEditor : Editor
         {
             seg_switch = -seg_switch;
             Knot knot = (Knot)target;
-            knot.SetSelectedSegment(knot.GetSelectedSegment() + seg_switch);
+            knot.SetSelectedSegment(knot.GetSelectedSegment() + seg_switch );
             Debug.Log("selected segment " + knot.GetSelectedSegment());
         }
 
