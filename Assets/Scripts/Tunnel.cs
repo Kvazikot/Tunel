@@ -135,16 +135,16 @@ public class Tunnel : MonoBehaviour
         {
             k1 = transform.GetChild(i - 1).GetComponent<Knot>();
             k2 = transform.GetChild(i).GetComponent<Knot>();
-            kk1 = new Knot(k1);
-            kk2 = new Knot(k2);
-            knts.Add(new Tuple<Knot,Knot>(k1, k2));
+            kk1 = new Knot(k1, Knot.KnotType.Starting);
+            kk2 = new Knot(k2, Knot.KnotType.Ending);
+            knts.Add(new Tuple<Knot,Knot>(kk1, kk2));
         }
         
         k1 = transform.GetChild(transform.childCount - 1).GetComponent<Knot>();
         k2 = transform.GetChild(0).GetComponent<Knot>();
-        kk1 = new Knot(k1);
-        kk2 = new Knot(k2);
-        knts.Add(new Tuple<Knot, Knot>(k1, k2));
+        kk1 = new Knot(k1, Knot.KnotType.Starting);
+        kk2 = new Knot(k2, Knot.KnotType.Ending);
+        knts.Add(new Tuple<Knot, Knot>(kk1, kk2));
 
 
         foreach (Tuple<Knot, Knot> pair in knts)
@@ -158,13 +158,13 @@ public class Tunnel : MonoBehaviour
             pair.Item2.SCALER = inital_scaler;
             //pair.Item2.t = t1 * pair.Item2.SCALER;
             pair.Item2.UpdateRotation();
-            Debug.Log($"LHC segments.Count = {segments.Count}");
+            
             TunnelSegment segment = new TunnelSegment(pair.Item1, pair.Item2);
             segments.Add(segment);
             segment.Start();
-            pair.Item1.SetMySegment(segments.Count);
+            pair.Item1.SetMySegment(segments.Count-1);
             //pair.Item2.SetMySegment(segments.Count);
-            pair.Item1.SetSelectedSegment(segments.Count);
+            pair.Item1.SetSelectedSegment(segments.Count-1);
             //pair.Item2.SetSelectedSegment(segments.Count);
             t = t1;
         }
@@ -274,7 +274,7 @@ public class Tunnel : MonoBehaviour
 
             // draw a spline
             Gizmos.color = Color.yellow;
-            if ( s == (n_selected_segment-1))
+            if ( s == (n_selected_segment))
                 Gizmos.color = Color.red;
             seg.DrawSpline(seg.tA.position, seg.tB.position, seg.tA.t, seg.tB.t, seg.coef);
 
@@ -284,10 +284,16 @@ public class Tunnel : MonoBehaviour
 
     }
 
-    public void UpdateGeometry()
+    
+    public void UpdateGeometry(Knot knot)
     {
-        for (int i = 0; i < segments.Count; i++)
-            segments[i].UpdateSpline();
+        int n_segment = knot.GetMySegment();
+        if ( knot.type == Knot.KnotType.Starting)
+            segments[n_segment].tA = knot;
+        else
+            segments[n_segment].tB = knot;
+        //for (int i = 0; i < segments.Count; i++)
+        segments[n_segment].UpdateSpline();
     }
 
     // Update is called once per frame

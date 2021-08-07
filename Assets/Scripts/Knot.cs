@@ -2,7 +2,14 @@ using UnityEngine;
 
 public class Knot : MonoBehaviour
 {
-    public Tunnel tunel = null;
+    public Tunnel tunnel = null;
+    public enum KnotType
+    {
+        Starting=0,
+        Ending=1,
+    }
+    public Knot base_knot = null;
+    public KnotType type;
     public Vector3 t;
     public Vector3 position;
     Quaternion rotation;
@@ -13,13 +20,16 @@ public class Knot : MonoBehaviour
     public float angle1;
     public int n_selected_segment = 0;
     public int n_segment = 0;
+    public int seg_switch = 1;
 
-
-    public Knot(Knot A)
+    public Knot(Knot A, KnotType _type=0)
     {
+        base_knot = A;
+        seg_switch = 1;
         t = A.t;
+        type = _type;
         SCALER = A.SCALER;
-        tunel = GameObject.Find("tunnel").GetComponent<Tunnel>();
+        tunnel = GameObject.Find("tunnel").GetComponent<Tunnel>();
         position = A.transform.position;
         rotation = A.transform.rotation;
         scale = A.transform.localScale;
@@ -28,14 +38,24 @@ public class Knot : MonoBehaviour
     public void SetSelectedSegment(int n)
     {
         n_selected_segment = n;
-        if (tunel != null)
-            tunel.n_selected_segment = n;
+        if( base_knot!=null) base_knot.n_selected_segment = n;
+        if (tunnel != null)
+        {
+            tunnel.n_selected_segment = n;
+            //Debug.Log("SET SELECTED SEGMENT");
+        }
+        else
+            Debug.Log("TUNNEL OBJECT REFERENCE IS NOT SET UP CORRECTLY");
     }
 
     public void SetMySegment(int n)
     {
         n_segment = n;
+        if (base_knot != null) base_knot.n_segment = n;
+        Debug.Log($"LHC SetMySegment = {n}");
     }
+
+    public void SwitchSegment() { seg_switch = -seg_switch;  }
 
     public int GetMySegment() { return n_segment; }
     public int GetSelectedSegment() { return n_selected_segment; }
@@ -43,12 +63,13 @@ public class Knot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tunel = GameObject.Find("tunnel").GetComponent<Tunnel>();
+        tunnel = GameObject.Find("tunnel").GetComponent<Tunnel>();
         transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
         position = transform.position;
         rotation = transform.rotation;
         scale = transform.localScale;
-
+        base_knot = this;
+        seg_switch = 1;
     }
 
     // Update is called once per frame
@@ -63,9 +84,9 @@ public class Knot : MonoBehaviour
             Vector3 tt;
             transform.rotation.ToAngleAxis(out a, out tt);
             //tt.y = 0;
-            //t = tt;
-            //t = tt.normalized * SCALER ;
-            if(tunel!=null) tunel.UpdateGeometry();
+            t = tt;
+            t = tt.normalized * SCALER ;
+            if(tunnel!=null) tunnel.UpdateGeometry(this);
             //Debug.Log($"localScale = {transform.localScale.x}");
         }
         position = transform.position;

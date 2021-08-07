@@ -7,8 +7,6 @@ using UnityEditor;
 public class KnotEditor : Editor
 {
     float size = 1.5f;
-    int seg_switch = 1;
-
 
     public override void OnInspectorGUI() 
     {
@@ -25,9 +23,9 @@ public class KnotEditor : Editor
     {
         if (Event.current.type == EventType.MouseUp && Event.current.button == 0)
         {
-            seg_switch = -seg_switch;
             Knot knot = (Knot)target;
-            knot.SetSelectedSegment(knot.GetSelectedSegment() + seg_switch );
+            knot.SwitchSegment();
+            knot.SetSelectedSegment(knot.GetSelectedSegment() + knot.seg_switch  );
             Debug.Log("selected segment " + knot.GetSelectedSegment());
         }
 

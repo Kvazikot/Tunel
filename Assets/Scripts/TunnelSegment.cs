@@ -67,7 +67,7 @@ public class TunnelSegment
 
         //copy tangent vectors from rotation of tA and tB       
         Debug.Log("------------- Tunnel::CalculateSpline() -------------");
-        Debug.Log($"A={tA} B={tB}");
+        Debug.Log($"A={tA.position} B={tB.position}");
         coef = CalculateSpline(tA.position, tB.position, tA.t, tB.t);
         Debug.Log("result of function: ");
         Debug.Log($"t0={tA.t} t1={tB.t}");
