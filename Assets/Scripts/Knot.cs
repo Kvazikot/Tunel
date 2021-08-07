@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Knot : MonoBehaviour
 {
-    public Tunel tunel = null;
+    public Tunnel tunel = null;
     public Vector3 t;
     public Vector3 position;
     Quaternion rotation;
@@ -19,7 +19,7 @@ public class Knot : MonoBehaviour
     {
         t = A.t;
         SCALER = A.SCALER;
-        tunel = GameObject.Find("tunel").GetComponent<Tunel>();
+        tunel = GameObject.Find("tunel").GetComponent<Tunnel>();
         position = A.transform.position;
         rotation = A.transform.rotation;
         scale = A.transform.localScale;
@@ -43,7 +43,7 @@ public class Knot : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tunel = GameObject.Find("tunel").GetComponent<Tunel>();
+        tunel = GameObject.Find("tunel").GetComponent<Tunnel>();
         transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
         position = transform.position;
         rotation = transform.rotation;

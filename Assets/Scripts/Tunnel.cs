@@ -92,9 +92,9 @@ public class MinimalMesh
 
 }
 
-public class Tunel : MonoBehaviour
+public class Tunnel : MonoBehaviour
 {
-    public List<TunelSegment> segments = null;
+    public List<TunnelSegment> segments = null;
     int n_frame = 0;
     [Range(0.0f, 1f)]
     public float radius = 0.2f;
@@ -104,9 +104,9 @@ public class Tunel : MonoBehaviour
     public int num_side_segments = 20;
     public int n_selected_segment = 0;
 
-    public Tunel()
+    public Tunnel()
     {
-        segments = new List<TunelSegment>();
+        segments = new List<TunnelSegment>();
     }
 
     public int GetNumSegments()
@@ -159,7 +159,7 @@ public class Tunel : MonoBehaviour
             //pair.Item2.t = t1 * pair.Item2.SCALER;
             pair.Item2.UpdateRotation();
             Debug.Log($"LHC segments.Count = {segments.Count}");
-            TunelSegment segment = new TunelSegment(pair.Item1, pair.Item2);
+            TunnelSegment segment = new TunnelSegment(pair.Item1, pair.Item2);
             segments.Add(segment);
             segment.Start();
             pair.Item1.SetMySegment(segments.Count);
@@ -202,7 +202,7 @@ public class Tunel : MonoBehaviour
     }
 
 
-    void drawWireSegments(TunelSegment seg) // on DrawGizmos call
+    void drawWireSegments(TunnelSegment seg) // on DrawGizmos call
     {      
         //2. rotation of the plane of the base of the tunnel (circle) to EulerAngles
         float pathLen = 0, L = 0, gapLen = 0;
@@ -259,7 +259,7 @@ public class Tunel : MonoBehaviour
         for (int s = 0; s < segments.Count; s++)
         {
 
-            TunelSegment seg = segments[s];
+            TunnelSegment seg = segments[s];
             
             // draw tangential vectors at points p (0) and p (1)
             float scaler = 1f;

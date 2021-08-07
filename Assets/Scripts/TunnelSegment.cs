@@ -40,7 +40,7 @@ using UnityEditor;
 using UnityEngine;
 
 
-public class TunelSegment 
+public class TunnelSegment 
 {
     public int resolution = 1000;
     public Knot tA;
@@ -50,7 +50,7 @@ public class TunelSegment
     public float _seconds;
     const bool LOG_SPLINE_VALUES = false;
 
-    public TunelSegment(Knot p1, Knot p2)
+    public TunnelSegment(Knot p1, Knot p2)
     {
         tA = p1; tB = p2;
     }
@@ -66,7 +66,7 @@ public class TunelSegment
         points = new Vector3[resolution + 1];
 
         //copy tangent vectors from rotation of tA and tB       
-        Debug.Log("------------- Tunel::CalculateSpline() -------------");
+        Debug.Log("------------- Tunnel::CalculateSpline() -------------");
         Debug.Log($"A={tA} B={tB}");
         coef = CalculateSpline(tA.position, tB.position, tA.t, tB.t);
         Debug.Log("result of function: ");
@@ -74,7 +74,7 @@ public class TunelSegment
         Debug.Log($"coefficient of solution Matrix for Hermit spline");
         Debug.Log($"{coef}");
         Debug.Log("result of function: ");
-        Debug.Log("------------- Tunel::DrawSpline() ------------- "); // new line
+        Debug.Log("------------- Tunnel::DrawSpline() ------------- "); // new line
 
       
 
