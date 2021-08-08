@@ -48,13 +48,13 @@ Prepare a texture for a quad point or take a gradient texture
 You can write a shader program to do this.
 Lines from control points can be displayed by hatching(dotted line)
 The spline is colored red.
-2. Prepare a prefarb for the checkpoint.
+2. Prepare a prefarb for the bezie knot.
 Create a quad and a shader for it with a circle with a border, you can make a gradient fill.
 3. Create the BezieSpline class.
 This method creates a point by instantiating prefarb.
-How many checkpoints are there maximum?
+How many knot points you need?
 Transfer point cache logic to BezieSpline.
-- Checkpoints can only be shown for the selected segment.
+- Bezie knots can only be shown for the selected segment.
 4. The spline interface implements the BezieSplineEditor class with an AddKnot button.
 
 
