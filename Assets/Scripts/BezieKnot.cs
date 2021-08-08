@@ -39,6 +39,7 @@ using UnityEditor;
 
 public class BezieKnot : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,7 +57,7 @@ public class BezieKnot : MonoBehaviour
 
 public class BezieKnotGizmoDrawer
 {
-    [DrawGizmo(GizmoType.Selected | GizmoType.Active)]
+    [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
     static void DrawGizmoForBezieKnot(BezieKnot scr, GizmoType gizmoType)
     {
         Vector3 position = scr.transform.position;

@@ -66,6 +66,8 @@ using UnityEngine;
 
 public class BezieSpline : MonoBehaviour
 {
+    public BezieKnot knot;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -76,6 +78,11 @@ public class BezieSpline : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+    }
+
+    public void DeleteKnots()
+    { 
         
     }
 }
