@@ -35,6 +35,7 @@ SOFTWARE.
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class BezieKnot : MonoBehaviour
 {
@@ -48,5 +49,19 @@ public class BezieKnot : MonoBehaviour
     void Update()
     {
         
+    }
+}
+
+// The icon has to be stored in Assets/Gizmos
+
+public class BezieKnotGizmoDrawer
+{
+    [DrawGizmo(GizmoType.Selected | GizmoType.Active)]
+    static void DrawGizmoForBezieKnot(BezieKnot scr, GizmoType gizmoType)
+    {
+        Vector3 position = scr.transform.position;
+
+        if (Vector3.Distance(position, Camera.current.transform.position) > 10f)
+            Gizmos.DrawIcon(position, "red_knot.png", true);
     }
 }
