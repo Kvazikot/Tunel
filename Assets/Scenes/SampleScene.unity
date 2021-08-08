@@ -231,10 +231,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa93372c0e1d96b4a8795eb5a9ee2875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tunel: {fileID: 0}
+  tunnel: {fileID: 0}
+  base_knot: {fileID: 0}
+  type: 0
   t: {x: 0, y: 0, z: 0}
   position: {x: 0, y: 0, z: 0}
   SCALER: 1
+  angle1: 0
+  angle2: 0
+  n_selected_segment: -1
+  n_segment: 0
+  seg_switch: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,7 +338,7 @@ GameObject:
   - component: {fileID: 1477793819}
   - component: {fileID: 1477793817}
   m_Layer: 0
-  m_Name: tunel
+  m_Name: tunnel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -352,6 +359,7 @@ MonoBehaviour:
   radius: 1
   num_base_segments: 20
   num_side_segments: 20
+  n_selected_segment: 0
 --- !u!4 &1477793818
 Transform:
   m_ObjectHideFlags: 0
@@ -465,10 +473,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa93372c0e1d96b4a8795eb5a9ee2875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tunel: {fileID: 0}
+  tunnel: {fileID: 0}
+  base_knot: {fileID: 0}
+  type: 0
   t: {x: 0, y: 0, z: 0}
   position: {x: 0, y: 0, z: 0}
   SCALER: 1
+  angle1: 0
+  angle2: 0
+  n_selected_segment: 0
+  n_segment: 0
+  seg_switch: 0
 --- !u!135 &1522673388
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -639,10 +654,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa93372c0e1d96b4a8795eb5a9ee2875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tunel: {fileID: 0}
+  tunnel: {fileID: 0}
+  base_knot: {fileID: 0}
+  type: 0
   t: {x: 0, y: 0, z: 0}
   position: {x: 0, y: 0, z: 0}
   SCALER: 1
+  angle1: 0
+  angle2: 0
+  n_selected_segment: 0
+  n_segment: 0
+  seg_switch: 0
 --- !u!1 &2016271263
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,10 +711,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa93372c0e1d96b4a8795eb5a9ee2875, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tunel: {fileID: 0}
+  tunnel: {fileID: 0}
+  base_knot: {fileID: 0}
+  type: 0
   t: {x: 0, y: 0, z: 0}
   position: {x: 0, y: 0, z: 0}
   SCALER: 1
+  angle1: 0
+  angle2: 0
+  n_selected_segment: 0
+  n_segment: 0
+  seg_switch: 0
 --- !u!135 &2016271266
 SphereCollider:
   m_ObjectHideFlags: 0

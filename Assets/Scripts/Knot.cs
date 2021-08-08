@@ -1,3 +1,37 @@
+/*---------------------------------------------------------------------------------------+
+  +-+-+---+-+-+ copytight by Kvazikot  +-+-+---+-+-+ 
+  +-+-+ email: vsbaranov83@gmail.com 
+  + - + - + github: http://github.com/Kvazikot/ 
+  + - + - + --- + - + - + 
+  Program for building a tunnel with a road. The road passes smoothly 
+  into a wormhole.The texture of the walls of a wormhole is changing, examples 
+  pictures can be viewed c: \ images \ path_to_images
+  The tunnel can be built into the scene with the car. 
+
+  Source creation date: 07/28/2021 
++ ------------------------------------------------- --------------------------------------- +
+                +-+--+---+--+-+     MIT LICENSE     +-+--+---+--+-+                                   
+
+Copyright (c) 2021 Kvazikot
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 using UnityEngine;
 
 public class Knot : MonoBehaviour
@@ -16,8 +50,11 @@ public class Knot : MonoBehaviour
     Vector3 scale;
     [Range(0, 100)]
     public float SCALER = 1f;
+    float[] angle = new float[3]{ 0f, 0f, 0f };
     [Range(0, 360)]
     public float angle1;
+    [Range(0, 360)]
+    public float angle2;
     public int n_selected_segment = 0;
     public int n_segment = 0;
     public int seg_switch = 1;
@@ -33,6 +70,7 @@ public class Knot : MonoBehaviour
         position = A.transform.position;
         rotation = A.transform.rotation;
         scale = A.transform.localScale;
+        angle = new float[3];
     }
 
     public void SetSelectedSegment(int n)
@@ -70,6 +108,7 @@ public class Knot : MonoBehaviour
         scale = transform.localScale;
         base_knot = this;
         seg_switch = 1;
+        angle = new float[3];
     }
 
     // Update is called once per frame
@@ -78,7 +117,9 @@ public class Knot : MonoBehaviour
         //return;
         if ((position != transform.position) || 
             (rotation!= transform.rotation) ||
-            (scale != transform.localScale))
+            (scale != transform.localScale) ||
+            (angle[0] != angle1) ||
+            (angle[1] != angle2))
         {
             float a;
             Vector3 tt;
@@ -86,12 +127,18 @@ public class Knot : MonoBehaviour
             //tt.y = 0;
             t = tt;
             t = tt.normalized * SCALER ;
-            if(tunnel!=null) tunnel.UpdateGeometry(this);
+            Quaternion q;
+            q = Quaternion.AngleAxis(angle1, Vector3.up);
+            t = q * Vector3.forward * SCALER;
+
+            if (tunnel!=null) tunnel.UpdateGeometry(this);
             //Debug.Log($"localScale = {transform.localScale.x}");
         }
         position = transform.position;
         rotation = transform.rotation;
         scale = transform.localScale;
+        angle[0] = angle1;
+        angle[1] = angle2;
         //Debug.Log("LateUpdate");
 
     }
