@@ -1,5 +1,8 @@
 ======================= 09 aug 21 ========================= 
 ----- Topic: New ideas. Tunnel animation.
+All scene should be in style of "Alice in wonderland"
+or visualise surrealistic mathematical paradoxes that cannot exist 
+in the real world. But can be in some hypotetical world in the multiverse.
 1. Bricks and arrow of time
 You can animate the bricks from which the tunnel is made.
 You can give a random impulse to each brick component
