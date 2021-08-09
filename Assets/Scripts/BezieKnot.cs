@@ -81,7 +81,7 @@ public class BezieKnot : MonoBehaviour
 
 public class BezieKnotGizmoDrawer
 {
-    [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Pickable)]
+    [DrawGizmo(GizmoType.Selected | GizmoType.Pickable)]
     static void DrawGizmoForBezieKnot(BezieKnot scr, GizmoType gizmoType)
     {
         Vector3 position = scr.transform.position;
@@ -96,4 +96,21 @@ public class BezieKnotGizmoDrawer
             Handles.Label(position * scale.x, $"{scr.getMyIndex()}");
         }
     }
+
+    [DrawGizmo(GizmoType.NonSelected | GizmoType.Pickable)]
+    static void DrawGizmoForBezieKnotS(BezieKnot scr, GizmoType gizmoType)
+    {
+        Vector3 position = scr.transform.position;
+
+        if (Vector3.Distance(position, Camera.current.transform.position) > 10f)
+        {
+            Vector3 scale = Gizmos.matrix.lossyScale;
+            //Debug.Log($"lossyScale={scale}");
+            //TODO: get Editor main window projection matrix and translate the label
+            // or second option - scale the icon according to the zoom of editor window
+            Gizmos.DrawIcon(position, "blue_knot.png", true);
+            Handles.Label(position * scale.x, $"{scr.getMyIndex()}");
+        }
+    }
+
 }
