@@ -56,7 +56,7 @@ How many knot points you need?
 Transfer point cache logic to BezieSpline.
 - Bezie knots can only be shown for the selected segment.
 4. The spline interface implements the BezieSplineEditor class with an AddKnot button.
-
+// https://pages.mtu.edu/~shene/COURSES/cs3621/NOTES/spline/Bezier/de-casteljau.html
 
 */
 
@@ -64,23 +64,81 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// https://pages.mtu.edu/~shene/COURSES/cs3621/NOTES/spline/Bezier/de-casteljau.html
+
 
 public class BezieSpline : MonoBehaviour
 {
     public BezieKnot knot;
-
+    float[] beta = new float[1];
+    float[] coefs_x = new float[1];
+    float[] coefs_y = new float[1];
+    float[] coefs_z = new float[1];
+    const int NUM_CHACHED_POINTS = 1000;
+    public Vector3[] points = new Vector3[NUM_CHACHED_POINTS];
     // Start is called before the first frame update
     void Start()
     {
-        
+        points = new Vector3[NUM_CHACHED_POINTS];
+    }
+
+    public float De_casteljau(float t, ref float[] coefs)
+    {
+        beta = coefs;
+        int n = beta.Length;
+        for (int j = 1; j < n; j++)
+        for (int k = 0; k < (n - j); k++)
+           beta[k] = beta[k] * (1 - t) + beta[k + 1] * t;                
+        return beta[0];
+    }
+
+
+    public void BuildSpline()
+    {
+        int beta_len = transform.childCount;
+        if (beta_len != coefs_x.Length)
+        {
+            coefs_x = new float[beta_len];
+            coefs_y = new float[beta_len];
+            coefs_z = new float[beta_len];
+            beta = new float[beta_len];
+        }
+
+        //fill arrays
+        for (int i = 0; i < beta_len; i++)
+        {
+            coefs_x[i] = transform.GetChild(i).transform.position.x;
+            coefs_y[i] = transform.GetChild(i).transform.position.y;
+            coefs_z[i] = transform.GetChild(i).transform.position.z;
+        }
+
+        //compute spline points
+        float step = 1f / NUM_CHACHED_POINTS;
+        points = new Vector3[NUM_CHACHED_POINTS+1];
+        int cnt = 0;
+        for (float t = 0; t < 1; t += step)
+        {
+            points[cnt].x = De_casteljau(t, ref coefs_x);
+            points[cnt].y = De_casteljau(t, ref coefs_y);
+            points[cnt].z = De_casteljau(t, ref coefs_z);
+            cnt++; 
+        }
+
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+    void OnDrawGizmos()
+    {
+        for (int i = 1; i < points.Length; i++)
+        {
+            Gizmos.DrawLine(points[i - 1], points[i]);
+            //Debug.Log($"points[i - 1] = {points[i - 1]}");
+        }
     }
 
     public void DeleteKnots()

@@ -10,7 +10,7 @@ public class BezieSplineEditor : Editor
 
     // Start is called before the first frame update
     void Start()
-    {
+    {       
         
     }
 
@@ -22,7 +22,6 @@ public class BezieSplineEditor : Editor
 
     string get_random_id_without_zeroes(int id_len)
     {
-        int a;
         string output="knot";
         for (int i = 0; i < id_len; i++)
         {
@@ -44,17 +43,23 @@ public class BezieSplineEditor : Editor
     {
         if (GUILayout.Button("AddKnot"))
         {
+            
             Vector3 pos = new Vector3(Random.Range(-10,10), 0, Random.Range(-10, 10));
-            BezieSpline spline = (BezieSpline)target;
+            BezieSpline spline = (BezieSpline)target;            
             GameObject newknot = new GameObject();
             newknot.name = get_random_id_without_zeroes(NUM_DIGITS_IN_NAME);
             newknot.transform.parent = spline.transform;
             newknot.transform.position = pos;
             newknot.AddComponent<BezieKnot>();
-
-
-
+            if (spline.transform.childCount > 4)
+                spline.BuildSpline();
         }
+        if (GUILayout.Button("BuildSpline"))
+        {
+            BezieSpline spline = (BezieSpline)target;
+            spline.BuildSpline();
+        }
+
 
             //int max_segments = myTarget.tunel.segments.Count;
             //myTarget.n_selected_segment = EditorGUILayout.Slider("n_selected_segment", myTarget.n_selected_segment, 0, max_segments);
