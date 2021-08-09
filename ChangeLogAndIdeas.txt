@@ -1,0 +1,42 @@
+======================= 09 aug 21 ========================= 
+----- Topic: New ideas. Tunnel animation.
+1. Bricks and arrow of time
+You can animate the bricks from which the tunnel is made.
+You can give a random impulse to each brick component
+tunnel walls AddForce. Each brick uses bump mapping.
+But each brick must build interesting figures in 
+Escher style of different detail.
+ 
+--- Questions: But one issues arises here, namely,
+--- reverse the arrow of time of Unity physics engine's ?
+How to reverse time in physX simulation in Unity engine?
+  
+2. The entrance to the tunnel can be in the form of a snake or dinosaur head.
+The camera can fly into the tunnel (flying car)
+
+
+====================== 08 aug 21 ========================= 
+----- Topic: Implementation of Bezie splines in Tunnel project
+Make the point look like a textured quad instead of a sphere.
+This will reduce the number of cycles wasted on unnecessary geometry.
+Add the ability to build Bezier splines, two more control points.
+De Casteljau's algorithm.
+The interpolation formula is on Wikipedia. Matrices are not needed there.
+Hermitian splines can be retained, or all points can be interpolated with a cubic spline.
+
+----- Topic: Implementation of Bezie splines
+1. Create a BezieKnot control point class
+Control points are red.
+Prepare a texture for a quad point or take a gradient texture
+You can write a shader program to do this.
+Lines from control points can be displayed by hatching (dotted line)
+The spline is colored red.
+2. Create a class BezieSpline.
+This method creates a point by instantiating prefarb.
+How many checkpoints are there maximum?
+Transfer point cache logic to BezieSpline.
+- Checkpoints can only be shown for the selected segment.
+3. The spline interface implements the BezieSplineEditor class with an AddKnot button.
+
+----- Topic: Tunel Class Rework
+---

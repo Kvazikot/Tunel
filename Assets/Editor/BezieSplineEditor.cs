@@ -46,7 +46,6 @@ public class BezieSplineEditor : Editor
         {
             Vector3 pos = new Vector3(Random.Range(-10,10), 0, Random.Range(-10, 10));
             BezieSpline spline = (BezieSpline)target;
-
             GameObject newknot = new GameObject();
             newknot.name = get_random_id_without_zeroes(NUM_DIGITS_IN_NAME);
             newknot.transform.parent = spline.transform;

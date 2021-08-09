@@ -64,6 +64,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// https://pages.mtu.edu/~shene/COURSES/cs3621/NOTES/spline/Bezier/de-casteljau.html
+
 public class BezieSpline : MonoBehaviour
 {
     public BezieKnot knot;
