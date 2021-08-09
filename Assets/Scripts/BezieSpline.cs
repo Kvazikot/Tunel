@@ -160,8 +160,7 @@ public class BezieSpline : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             BezieKnot knot = transform.GetChild(i - 0).GetComponent<BezieKnot>();
-            if(lockYAxis)
-                knot.SetlockYAxis();
+            knot.SetlockYAxis(lockYAxis);
         }
     }
 

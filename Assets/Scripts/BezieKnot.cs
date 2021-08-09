@@ -57,13 +57,14 @@ public class BezieKnot : MonoBehaviour
             transform.position = new Vector3(transform.position.x,
                                              positionState0.y,
                                               transform.position.z);
+            positionState0 = transform.position;
         }
 
 
     }
-    public void SetlockYAxis()
+    public void SetlockYAxis(bool flag)
     {
-        lockYTranslate = true;
+        lockYTranslate = flag;
         positionState0 = transform.position;
     }
 }

@@ -58,7 +58,7 @@ public class BezieSplineEditor : Editor
         if (GUILayout.Button("BuildSpline"))
             spline.BuildSpline();
         
-        lockYAxis = GUILayout.Toggle(lockYAxis, "Lock translation in Y axis");
+        lockYAxis = GUILayout.Toggle(spline.flags.LockYAxis, "Lock translation in Y axis");
         spline.setFlags(lockYAxis);
 
 

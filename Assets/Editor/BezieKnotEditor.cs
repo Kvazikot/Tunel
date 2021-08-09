@@ -25,16 +25,15 @@ public class BezieKnotEditor : Editor
             Debug.Log("mouse up ");
             BezieKnot knot = (BezieKnot)target;
             BezieSpline spline = (BezieSpline)knot.transform.parent.GetComponent<BezieSpline>();
+            knot.Update();
             spline.BuildSpline();
 
-          
+
 
         }
 
         if (Event.current.type == EventType.MouseMove && Event.current.button == 0)
         {
-            BezieKnot knot = (BezieKnot)target;
-            knot.Update();
         }
             
     }
