@@ -139,6 +139,10 @@ public class BezieSpline : MonoBehaviour
             Gizmos.DrawLine(points[i - 1], points[i]);
             //Debug.Log($"points[i - 1] = {points[i - 1]}");
         }
+        Gizmos.color = Color.yellow;
+        for(int i=1; i < transform.childCount; i++)
+            Gizmos.DrawLine(transform.GetChild(i - 1).transform.position,
+                            transform.GetChild(i - 0).transform.position);
     }
 
     public void DeleteKnots()
