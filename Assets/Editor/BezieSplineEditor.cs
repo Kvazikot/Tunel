@@ -68,11 +68,4 @@ public class BezieSplineEditor : Editor
             DrawDefaultInspector();
     }
 
-    protected virtual void OnSceneGUI()
-    {
-        if (Event.current.type == EventType.MouseUp && Event.current.button == 0)
-        {
-            Debug.Log("mouse up " );
-        }
-    }
 }

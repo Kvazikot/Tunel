@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\KnotEditor.cs" />
     <Compile Include="Assets\Editor\BezieSplineEditor.cs" />
+    <Compile Include="Assets\Editor\BezieKnotEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
