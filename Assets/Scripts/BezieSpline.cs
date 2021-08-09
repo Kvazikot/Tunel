@@ -63,6 +63,7 @@ Transfer point cache logic to BezieSpline.
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class SplineFlags
 {
@@ -77,6 +78,7 @@ public class SplineFlags
 public class BezieSpline : MonoBehaviour
 {
     public BezieKnot knot;
+    public float dashSize = 4.0f;
     public SplineFlags flags = new SplineFlags();
     float[] beta = new float[1];
     float[] coefs_x = new float[1];
@@ -148,10 +150,13 @@ public class BezieSpline : MonoBehaviour
             Gizmos.DrawLine(points[i - 1], points[i]);
             //Debug.Log($"points[i - 1] = {points[i - 1]}");
         }
-        Gizmos.color = Color.yellow;
-        for(int i=1; i < transform.childCount; i++)
-            Gizmos.DrawLine(transform.GetChild(i - 1).transform.position,
-                            transform.GetChild(i - 0).transform.position);
+        
+        var color = new Color(255f/255f, 140f/255f, 68f/255f, 1);
+         //this color named "Studio" in html colors
+        Handles.color = color;
+        for (int i=1; i < transform.childCount; i++)
+            Handles.DrawDottedLine(transform.GetChild(i - 1).transform.position,
+                            transform.GetChild(i - 0).transform.position, dashSize);
     }
 
     public void setFlags(bool lockYAxis)
