@@ -64,11 +64,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class SplineFlags
+{
+    public bool LockYAxis;
+    public SplineFlags()
+    {
+        LockYAxis = true;
+    }
+}
 
 
 public class BezieSpline : MonoBehaviour
 {
     public BezieKnot knot;
+    public SplineFlags flags = new SplineFlags();
     float[] beta = new float[1];
     float[] coefs_x = new float[1];
     float[] coefs_y = new float[1];
@@ -143,6 +152,17 @@ public class BezieSpline : MonoBehaviour
         for(int i=1; i < transform.childCount; i++)
             Gizmos.DrawLine(transform.GetChild(i - 1).transform.position,
                             transform.GetChild(i - 0).transform.position);
+    }
+
+    public void setFlags(bool lockYAxis)
+    {
+        flags.LockYAxis = lockYAxis;
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            BezieKnot knot = transform.GetChild(i - 0).GetComponent<BezieKnot>();
+            if(lockYAxis)
+                knot.SetlockYAxis();
+        }
     }
 
     public void DeleteKnots()

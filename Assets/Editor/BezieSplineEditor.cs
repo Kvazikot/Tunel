@@ -7,6 +7,7 @@ using UnityEditor;
 public class BezieSplineEditor : Editor
 {
     const int NUM_DIGITS_IN_NAME = 4;
+    bool lockYAxis = false;
 
     // Start is called before the first frame update
     void Start()
@@ -41,11 +42,11 @@ public class BezieSplineEditor : Editor
 
     public override void OnInspectorGUI()
     {
+        BezieSpline spline = (BezieSpline)target;
         if (GUILayout.Button("AddKnot"))
         {
             
             Vector3 pos = new Vector3(Random.Range(-10,10), 0, Random.Range(-10, 10));
-            BezieSpline spline = (BezieSpline)target;            
             GameObject newknot = new GameObject();
             newknot.name = get_random_id_without_zeroes(NUM_DIGITS_IN_NAME);
             newknot.transform.parent = spline.transform;
@@ -55,17 +56,17 @@ public class BezieSplineEditor : Editor
                 spline.BuildSpline();
         }
         if (GUILayout.Button("BuildSpline"))
-        {
-            BezieSpline spline = (BezieSpline)target;
             spline.BuildSpline();
-        }
+        
+        lockYAxis = GUILayout.Toggle(lockYAxis, "Lock translation in Y axis");
+        spline.setFlags(lockYAxis);
 
 
-            //int max_segments = myTarget.tunel.segments.Count;
-            //myTarget.n_selected_segment = EditorGUILayout.Slider("n_selected_segment", myTarget.n_selected_segment, 0, max_segments);
+        //int max_segments = myTarget.tunel.segments.Count;
+        //myTarget.n_selected_segment = EditorGUILayout.Slider("n_selected_segment", myTarget.n_selected_segment, 0, max_segments);
 
             // Show default inspector property editor
-            DrawDefaultInspector();
+        DrawDefaultInspector();
     }
 
 }

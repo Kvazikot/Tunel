@@ -39,17 +39,32 @@ using UnityEditor;
 
 public class BezieKnot : MonoBehaviour
 {
-
+    public bool lockYTranslate;
+    Vector3 positionState0 = new Vector3();
     // Start is called before the first frame update
     void Start()
     {
-        
+        lockYTranslate = true;
+
+
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
-        
+        if (lockYTranslate)
+        {
+            transform.position = new Vector3(transform.position.x,
+                                             positionState0.y,
+                                              transform.position.z);
+        }
+
+
+    }
+    public void SetlockYAxis()
+    {
+        lockYTranslate = true;
+        positionState0 = transform.position;
     }
 }
 
