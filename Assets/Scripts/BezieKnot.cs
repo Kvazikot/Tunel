@@ -49,6 +49,14 @@ public class BezieKnot : MonoBehaviour
 
     }
 
+    public int getMyIndex()
+    {
+        for (int i = 0; i < transform.parent.childCount; i++)
+            if (transform.parent.GetChild(i) == this.transform)
+                return i;
+        return -1;
+    }
+
     // Update is called once per frame
     public void Update()
     {
@@ -79,6 +87,13 @@ public class BezieKnotGizmoDrawer
         Vector3 position = scr.transform.position;
 
         if (Vector3.Distance(position, Camera.current.transform.position) > 10f)
+        {
+            Vector3 scale = Gizmos.matrix.lossyScale;
+            //Debug.Log($"lossyScale={scale}");
+            //TODO: get Editor main window projection matrix and translate the label
+            // or second option - scale the icon according to the zoom of editor window
             Gizmos.DrawIcon(position, "red_knot.png", true);
+            Handles.Label(position * scale.x, $"{scr.getMyIndex()}");
+        }
     }
 }
