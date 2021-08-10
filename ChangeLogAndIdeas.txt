@@ -1,3 +1,23 @@
+======================= 10 aug 21 ========================= 
+----- Topic: Brick walls. Deterministic chaos
+I found answer to the arrow of time problem.
+Its not specific to unity althrou is a issue of laws determenistic chaos.
+We can store every transform matrix state for every brick of the wall.
+At any given moment of time. 
+But to reverse time backwards we need more memory.
+This is why i need more memory on laptop or i can limit the length of the tunnel.
+We need only FOV of camera, from far and near planes.
+
+----- Topic: Fractal walls
+In this site  http://www.josleys.com/index.php 
+i found a useful shader programs of how it can be done.
+I can decorate the walls with fractals it can look cool in certain segments of the tunnel.
+Also in this page i found examples of science visualisation 
+specificaly on chaos teory and explanation.
+I not sure how you can make money on fractals but never the less.
+https://www.chaos-math.org/en.html
+
+
 ======================= 09 aug 21 ========================= 
 ----- Topic: New ideas. Tunnel animation.
 All scene should be in style of "Alice in wonderland"
