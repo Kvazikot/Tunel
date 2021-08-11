@@ -1,3 +1,30 @@
+======================= 11 aug 21 ========================= 
+----- Topic: Creating programs for interpolation geometry of tunnel
+Some plan for the coming days. 
+"Poor plan is always better when no plan at all"(ñ)Kvazikot.
+1. Create Mesh of cylynder from primitives.
+If Mesh from unity primitives is not adjustible in terms of number of segments.
+Create mesh of a cylinder from scratch using polar coordinates along spline
+or just streight line.
+2. How to make interpolation of a geometry of a tunel in real time?
+ 2a. Use primitive create in 1. section of this pesudocode, 
+ 2b. Create vertex shader program on cg language from template let say checkboard 
+ (https://docs.unity3d.com/520/Documentation/Manual/SL-VertexFragmentShaderExamples.html ).
+    2ba. Test simple sinus wave on a cylinder mesh with time as a uniform variable  
+ 2c. Pass control points of a Bezie spline to vertex shader through uniform variables
+     Or we can pass control points as a mesh data.
+ 2d. To interpolate vertexes in shader we need to know the index of a vertex
+     Therefore we need to create second layer of uv-coordinates to the mesh.
+     OR simply use z coordinate for that purpuose
+ 3e. Interpolate control points of a bezie Spline in .NET code 
+    3ea. Interpolate control points of a spline according to sin wave.  
+    3eb. Make shure that its working at least on a level of Gizmo Drawing
+
+
+
+
+
+
 ======================= 10 aug 21 ========================= 
 ----- Topic: Brick walls. Deterministic chaos
 I found answer to the arrow of time problem.
