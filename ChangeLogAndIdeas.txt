@@ -1,7 +1,7 @@
 ======================= 11 aug 21 ========================= 
 ----- Topic: Creating programs for interpolation geometry of tunnel
 Some plan for the coming days. 
-"Poor plan is always better when no plan at all"(ñ)Kvazikot.
+"Crappy plan is always better when no plan at all"(ñ)Kvazikot.
 1. Create Mesh of cylynder from primitives.
 If Mesh from unity primitives is not adjustible in terms of number of segments.
 Create mesh of a cylinder from scratch using polar coordinates along spline
@@ -37,6 +37,8 @@ We need only FOV of camera, from far and near planes.
 
 ----- Topic: Fractal walls
 In this site  http://www.josleys.com/index.php 
+Specificaly this paper http://www.josleys.com/articles/JosLeyDelahayeV2.pdf
+describes fractal tunnels in Esher style.
 i found a useful shader programs of how it can be done.
 I can decorate the walls with fractals it can look cool in certain segments of the tunnel.
 Also in this page i found examples of science visualisation 
