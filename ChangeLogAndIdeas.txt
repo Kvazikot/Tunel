@@ -5,20 +5,27 @@ Some plan for the coming days.
 1. Create Mesh of cylynder from primitives.
 If Mesh from unity primitives is not adjustible in terms of number of segments.
 Create mesh of a cylinder from scratch using polar coordinates along spline
-or just streight line.
+or just straight line.
 2. How to make interpolation of a geometry of a tunel in real time?
- 2a. Use primitive create in 1. section of this pesudocode, 
+ 2a. Use cylinder primitive created in 1. section of this plan, 
  2b. Create vertex shader program on cg language from template let say checkboard 
  (https://docs.unity3d.com/520/Documentation/Manual/SL-VertexFragmentShaderExamples.html ).
     2ba. Test simple sinus wave on a cylinder mesh with time as a uniform variable  
  2c. Pass control points of a Bezie spline to vertex shader through uniform variables
      Or we can pass control points as a mesh data.
- 2d. To interpolate vertexes in shader we need to know the index of a vertex
+ 2d. To interpolate vertexes in shader we need to know the index of a vertex and current time
      Therefore we need to create second layer of uv-coordinates to the mesh.
-     OR simply use z coordinate for that purpuose
+     OR simply use z coordinate for that purpose
  3e. Interpolate control points of a bezie Spline in .NET code 
     3ea. Interpolate control points of a spline according to sin wave.  
     3eb. Make shure that its working at least on a level of Gizmo Drawing
+ 4a Create class in c# to encapsulate parametres for tunnel animation
+    List of parametres: time of whole animation cycle, 
+                        function for geometry interpolation.
+                        Fractal parametres
+                        List of transformations from one state to another.
+                        Make this class as a state machine.
+                        Class of animation state machine can be general as possible.
 
 
 
