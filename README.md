@@ -1,9 +1,10 @@
 # Tunel
 The program for building a tunnel with a road. The road smoothly turns into a wormhole. <br/>
-For more details see ChangeLogAndIdeas.txt file.
 The texture of the wormhole walls changes, examples <br/>
 pictures can be viewed c: \ images \ path_to_images. <br/>
 The tunnel can be built into the scene with the car.
+
+For more details see ChangeLogAndIdeas.txt file.
 
 Source creation date: 07/28/2021
 
