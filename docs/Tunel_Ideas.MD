@@ -1,7 +1,7 @@
 ======================= 11 aug 21 ========================= 
 ----- Topic: Creating programs for interpolation geometry of tunnel
 Some plan for the coming days. 
-"Crappy plan is always better when no plan at all"(ñ)Kvazikot.
+"Crappy plan is always better when no plan at all"(Ã±)Kvazikot.
 1. Create Mesh of cylynder from primitives.
 If Mesh from unity primitives is not adjustible in terms of number of segments.
 Create mesh of a cylinder from scratch using polar coordinates along spline
